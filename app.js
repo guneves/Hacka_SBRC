@@ -21,6 +21,15 @@ const baseline = {
     sensorsTotal: 8,
     cyberNoise: 3,
   },
+  liveWeather: {
+    enabled: false,
+    loading: false,
+    status: "fallback",
+    message: "Sem chamada externa neste ciclo",
+    lastFetch: null,
+    location: { latitude: -12.9777, longitude: -38.5016 },
+    current: null,
+  },
   sectors: [
     { id: "clinic", name: "Posto", priority: 1, load: 0.42, batteryShare: 21, status: "normal" },
     { id: "school", name: "Escola", priority: 2, load: 0.38, batteryShare: 16, status: "normal" },
@@ -72,6 +81,12 @@ const els = {
   stripContinuity: $("#strip-continuity"),
   stripContinuityLabel: $("#strip-continuity-label"),
   stripContinuityBar: $("#strip-continuity-bar"),
+  latitudeInput: $("#latitude-input"),
+  longitudeInput: $("#longitude-input"),
+  loadWeather: $("#load-weather"),
+  liveWeatherToggle: $("#live-weather-toggle"),
+  weatherSourceCopy: $("#weather-source-copy"),
+  weatherSourceStatus: $("#weather-source-status"),
   riskBadge: $("#risk-badge"),
   guardianPanel: $("#guardian-panel"),
   guardianTitle: $("#guardian-title"),
@@ -196,6 +211,16 @@ const assetDetails = {
   },
 };
 
+const pvModel = {
+  peakPowerKw: 6.2,
+  absorption: 0.9,
+  moduleEfficiency: 0.18,
+  u0: 25,
+  u1: 6.84,
+  tempCoeff: -0.0035,
+  systemLoss: 0.13,
+};
+
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -250,6 +275,144 @@ function setScenario(name) {
   simulateTick(true);
 }
 
+async function fetchOpenMeteoTelemetry() {
+  const latitude = Number(els.latitudeInput.value);
+  const longitude = Number(els.longitudeInput.value);
+
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+    setWeatherStatus("fallback", "Coordenadas invalidas", "Informe latitude e longitude validas.");
+    return;
+  }
+
+  state.liveWeather.loading = true;
+  setWeatherStatus("loading", "Consultando Open-Meteo", "Buscando meteorologia e radiacao solar.");
+
+  const params = new URLSearchParams({
+    latitude: latitude.toFixed(4),
+    longitude: longitude.toFixed(4),
+    current: "temperature_2m,relative_humidity_2m,precipitation,cloud_cover,wind_speed_10m",
+    hourly: "temperature_2m,relative_humidity_2m,wind_speed_10m,precipitation,cloud_cover,shortwave_radiation,direct_radiation,diffuse_radiation",
+    forecast_days: "1",
+    timezone: "auto",
+  });
+
+  try {
+    const response = await fetch(`https://api.open-meteo.com/v1/forecast?${params.toString()}`);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const payload = await response.json();
+    const current = normalizeOpenMeteoPayload(payload);
+    state.liveWeather = {
+      ...state.liveWeather,
+      loading: false,
+      status: "live",
+      message: "Dados reais aplicados ao motor solar e ambiental.",
+      lastFetch: new Date(),
+      location: { latitude, longitude },
+      current,
+    };
+    state.liveWeather.enabled = true;
+    els.liveWeatherToggle.checked = true;
+    pushEvent("info", "Open-Meteo atualizado", `Telemetria real carregada para ${latitude.toFixed(4)}, ${longitude.toFixed(4)}.`);
+    simulateTick(true);
+  } catch (error) {
+    state.liveWeather.loading = false;
+    state.liveWeather.enabled = false;
+    els.liveWeatherToggle.checked = false;
+    setWeatherStatus("fallback", "Fallback simulado", `Open-Meteo indisponivel: ${error.message}.`);
+    pushEvent("warning", "Falha Open-Meteo", "Nao foi possivel atualizar a API. Simulacao local mantida.");
+    render(analyze());
+  }
+}
+
+function normalizeOpenMeteoPayload(payload) {
+  const current = payload.current || {};
+  const hourly = payload.hourly || {};
+  const index = closestHourlyIndex(hourly.time || [], current.time);
+
+  const shortwave = valueAt(hourly.shortwave_radiation, index, 0);
+  const direct = valueAt(hourly.direct_radiation, index, 0);
+  const diffuse = valueAt(hourly.diffuse_radiation, index, 0);
+  const temperature = numberOr(current.temperature_2m, valueAt(hourly.temperature_2m, index, state.metrics.temperature));
+  const humidity = numberOr(current.relative_humidity_2m, valueAt(hourly.relative_humidity_2m, index, state.metrics.humidity));
+  const windKmh = numberOr(current.wind_speed_10m, valueAt(hourly.wind_speed_10m, index, 8));
+  const precipitation = numberOr(current.precipitation, valueAt(hourly.precipitation, index, 0));
+  const cloudCover = numberOr(current.cloud_cover, valueAt(hourly.cloud_cover, index, 30));
+  const pv = estimatePvGeneration({ temperature, windKmh, shortwave });
+
+  return {
+    time: current.time || hourly.time?.[index] || new Date().toISOString(),
+    temperature,
+    humidity,
+    windKmh,
+    precipitation,
+    cloudCover,
+    shortwave,
+    direct,
+    diffuse,
+    cellTemperature: pv.cellTemperature,
+    pvGeneration: pv.acPowerKw,
+  };
+}
+
+function closestHourlyIndex(times, currentTime) {
+  if (!times.length) return 0;
+  const target = currentTime ? new Date(currentTime).getTime() : Date.now();
+  let best = 0;
+  let bestDistance = Number.POSITIVE_INFINITY;
+  times.forEach((time, index) => {
+    const distance = Math.abs(new Date(time).getTime() - target);
+    if (distance < bestDistance) {
+      best = index;
+      bestDistance = distance;
+    }
+  });
+  return best;
+}
+
+function valueAt(values, index, fallback) {
+  return Array.isArray(values) && Number.isFinite(values[index]) ? values[index] : fallback;
+}
+
+function numberOr(value, fallback) {
+  return Number.isFinite(value) ? value : fallback;
+}
+
+function estimatePvGeneration({ temperature, windKmh, shortwave }) {
+  const windMs = Math.max(0.2, windKmh / 3.6);
+  const heatLoss = pvModel.u0 + pvModel.u1 * windMs;
+  const cellTemperature =
+    temperature + (shortwave * pvModel.absorption * (1 - pvModel.moduleEfficiency)) / Math.max(heatLoss, 1);
+  const dcPowerKw =
+    pvModel.peakPowerKw *
+    (shortwave / 1000) *
+    (1 + pvModel.tempCoeff * (cellTemperature - 25));
+  const acPowerKw = clamp(dcPowerKw * (1 - pvModel.systemLoss), 0, pvModel.peakPowerKw);
+  return { cellTemperature, acPowerKw };
+}
+
+function applyLiveWeatherTelemetry() {
+  if (!state.liveWeather.enabled || !state.liveWeather.current) return;
+
+  const w = state.liveWeather.current;
+  const m = state.metrics;
+  m.temperature = clamp(w.temperature + rand(-0.2, 0.2), 5, 52);
+  m.humidity = clamp(w.humidity + rand(-1, 1), 10, 100);
+  m.generation = clamp(w.pvGeneration + rand(-0.08, 0.08), 0, pvModel.peakPowerKw);
+  m.aqi = clamp(96 - w.cloudCover * 0.12 - w.precipitation * 2 + rand(-2, 2), 35, 99);
+  m.smoke = clamp(w.shortwave < 80 && w.cloudCover > 80 ? 5 + rand(0, 4) : rand(0, 3), 0, 30);
+
+  if (w.precipitation > 2) {
+    m.latency = clamp(m.latency + w.precipitation * 6, 20, 220);
+    m.packetLoss = clamp(m.packetLoss + w.precipitation * 0.35, 0, 12);
+  }
+}
+
+function setWeatherStatus(status, title, message) {
+  state.liveWeather.status = status;
+  state.liveWeather.message = message;
+  renderWeatherSource();
+}
+
 function simulateTick(force = false) {
   if (state.paused && !force) return;
 
@@ -271,6 +434,8 @@ function simulateTick(force = false) {
     m.sensorsOnline = 8;
     m.cyberNoise = clamp(3 + rand(-1, 2), 0, 8);
   }
+
+  applyLiveWeatherTelemetry();
 
   if (state.scenario === "storm") {
     m.generation = clamp(1.05 + rand(-0.22, 0.3), 0.35, 1.8);
@@ -480,6 +645,7 @@ function render(analysis = analyze()) {
   els.syncMode.textContent = m.routersOnline < 3 ? "Edge local ativo, cloud degradada" : "Edge + Cloud sincronizado";
   els.activeScenario.textContent = scenarioLabels[state.scenario];
 
+  renderWeatherSource();
   renderKpis(analysis);
   renderResilienceStrip(analysis);
   renderDomainCards(analysis);
@@ -527,6 +693,29 @@ function renderResilienceStrip(analysis) {
           ? "linear-gradient(90deg, var(--amber), #f2be52)"
           : "linear-gradient(90deg, var(--green), #6ec99a)";
   });
+}
+
+function renderWeatherSource() {
+  const source = state.liveWeather;
+  const current = source.current;
+  const mode = source.enabled && current ? "live" : source.status;
+  const label = mode === "live" ? "Open-Meteo live" : mode === "loading" ? "carregando" : "fallback";
+  const tagLevel = mode === "live" ? "normal" : mode === "loading" ? "warning" : "warning";
+  const lastFetch = source.lastFetch
+    ? new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(source.lastFetch)
+    : "sem cache";
+
+  els.liveWeatherToggle.checked = Boolean(source.enabled && current);
+  els.loadWeather.textContent = source.loading ? "Atualizando..." : "Atualizar Open-Meteo";
+  els.loadWeather.disabled = source.loading;
+  els.weatherSourceCopy.textContent =
+    mode === "live"
+      ? `Usando temperatura, vento, chuva, nuvens e radiacao solar reais para ajustar geracao PV e risco ambiental.`
+      : "Telemetria em modo simulado com fallback local ativo.";
+  els.weatherSourceStatus.innerHTML =
+    `<span class="tag ${tagLevel}">${label}</span>` +
+    `<b>${mode === "live" ? `${current.temperature.toFixed(1)} C · ${current.shortwave.toFixed(0)} W/m2` : source.status === "loading" ? "Consultando API" : "Simulacao local"}</b>` +
+    `<small>${mode === "live" ? `Atualizado ${lastFetch}; nuvens ${current.cloudCover.toFixed(0)}%, vento ${current.windKmh.toFixed(1)} km/h.` : source.message}</small>`;
 }
 
 function renderDomainCards(analysis) {
@@ -791,6 +980,7 @@ async function copyOperationalReport() {
     "Sentinela Digital Pro - Relatorio operacional",
     `Horario: ${formatTime()}`,
     `Cenario: ${scenarioLabels[state.scenario]}`,
+    `Fonte meteorologica: ${state.liveWeather.enabled && state.liveWeather.current ? "Open-Meteo" : "Simulacao local"}`,
     `Estado: ${decision.state}`,
     `Score operacional: ${analysis.operationalScore}`,
     `Risco de continuidade: ${Math.round(analysis.risks.continuity)}%`,
@@ -1258,6 +1448,10 @@ function togglePause() {
 
 function resetSimulation() {
   state = structuredClone(baseline);
+  state.liveWeather.location = {
+    latitude: Number(els.latitudeInput.value) || baseline.liveWeather.location.latitude,
+    longitude: Number(els.longitudeInput.value) || baseline.liveWeather.location.longitude,
+  };
   pushEvent("info", "Sistema iniciado", "Coleta edge/cloud, analise e visualizacoes complexas ativadas.");
   for (let i = 0; i < 8; i += 1) simulateTick(true);
   render();
@@ -1266,6 +1460,25 @@ function resetSimulation() {
 function bindEvents() {
   els.pauseButton.addEventListener("click", togglePause);
   els.resetButton.addEventListener("click", resetSimulation);
+  els.loadWeather.addEventListener("click", fetchOpenMeteoTelemetry);
+  els.liveWeatherToggle.addEventListener("change", () => {
+    if (els.liveWeatherToggle.checked) {
+      if (state.liveWeather.current) {
+        state.liveWeather.enabled = true;
+        state.liveWeather.status = "live";
+        pushEvent("info", "Open-Meteo ativado", "Cache de telemetria real aplicado ao motor operacional.");
+        simulateTick(true);
+      } else {
+        fetchOpenMeteoTelemetry();
+      }
+    } else {
+      state.liveWeather.enabled = false;
+      state.liveWeather.status = "fallback";
+      state.liveWeather.message = "Dados reais pausados pelo usuario.";
+      pushEvent("info", "Fallback ativado", "Motor voltou a operar com simulacao local.");
+      simulateTick(true);
+    }
+  });
   $$(".scenario-buttons button").forEach((button) => {
     button.addEventListener("click", () => setScenario(button.dataset.scenario));
   });

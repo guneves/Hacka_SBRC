@@ -11,6 +11,7 @@ Aplicacao 100% via software para demonstrar um centro de operacoes de infraestru
 - Incidentes com severidade, causa raiz provavel, MTTR e plano de resposta.
 - Visualizacao detalhada de cada parte da topologia viva ao clicar nos nos do mapa.
 - Faixa visual de resiliencia por dominio e brief automatico para decisao operacional.
+- Integracao opcional com **Open-Meteo**, escolhida como API principal da pesquisa por ser JSON, sem chave e adequada a projetos comunitarios.
 
 ## Diferencial
 
@@ -50,6 +51,8 @@ Use os botoes de **Cenarios controlados**:
 Clique nos membros da **Topologia viva da comunidade** para abrir a visao detalhada do ativo, com telemetria local, dependencias, diagnostico, impacto comunitario e mini grafico.
 
 Use **Copiar relatorio** no painel de decisao operacional para gerar um resumo rapido do estado da infraestrutura.
+
+Use **Atualizar Open-Meteo** para buscar telemetria real por latitude/longitude. Se a API falhar ou a internet estiver indisponivel, o app continua no fallback simulado.
 
 ## Arquivos
 

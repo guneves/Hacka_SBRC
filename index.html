@@ -77,6 +77,35 @@
         </article>
       </section>
 
+      <section class="data-source-panel" aria-label="Fonte de dados reais">
+        <div>
+          <p class="eyebrow">API recomendada pela pesquisa</p>
+          <h2>Open-Meteo integrado ao motor da comunidade</h2>
+          <p id="weather-source-copy">Telemetria em modo simulado com fallback local ativo.</p>
+        </div>
+        <div class="source-controls">
+          <label>
+            Latitude
+            <input id="latitude-input" type="number" step="0.0001" value="-12.9777" />
+          </label>
+          <label>
+            Longitude
+            <input id="longitude-input" type="number" step="0.0001" value="-38.5016" />
+          </label>
+          <button class="copy-button" id="load-weather" type="button">Atualizar Open-Meteo</button>
+          <label class="switch-control">
+            <input id="live-weather-toggle" type="checkbox" />
+            <span></span>
+            Usar dados reais
+          </label>
+        </div>
+        <div class="source-status" id="weather-source-status">
+          <span class="tag warning">fallback</span>
+          <b>Simulacao local</b>
+          <small>Sem chamada externa neste ciclo</small>
+        </div>
+      </section>
+
       <section class="main-grid">
         <article class="panel map-panel">
           <div class="panel-head">

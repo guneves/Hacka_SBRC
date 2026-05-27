@@ -11,3 +11,11 @@
 ## Resultado esperado
 
 O app passa a comunicar melhor o estado da comunidade em poucos segundos, alem de gerar um resumo acionavel para manutencao e apresentacao.
+
+## Rodada Open-Meteo
+
+- [x] Selecionar Open-Meteo como API mais adequada da pesquisa para primeira integracao real.
+- [x] Adicionar controles de latitude e longitude sem exigir chave de API.
+- [x] Integrar temperatura, umidade, vento, chuva, nuvens e radiacao solar ao motor operacional.
+- [x] Calcular geracao fotovoltaica estimada com modelo fisico simplificado baseado em irradiancia, vento e temperatura.
+- [x] Manter fallback simulado automatico para preservar a demo sem internet.
