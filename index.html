@@ -54,6 +54,29 @@
         </article>
       </section>
 
+      <section class="resilience-strip" aria-label="Resumo visual de resiliencia">
+        <article class="strip-card" id="strip-energy">
+          <span>Energia</span>
+          <b id="strip-energy-label">Estavel</b>
+          <i><em id="strip-energy-bar"></em></i>
+        </article>
+        <article class="strip-card" id="strip-network">
+          <span>Rede</span>
+          <b id="strip-network-label">Online</b>
+          <i><em id="strip-network-bar"></em></i>
+        </article>
+        <article class="strip-card" id="strip-environment">
+          <span>Ambiente</span>
+          <b id="strip-environment-label">Normal</b>
+          <i><em id="strip-environment-bar"></em></i>
+        </article>
+        <article class="strip-card" id="strip-continuity">
+          <span>Continuidade</span>
+          <b id="strip-continuity-label">Protegida</b>
+          <i><em id="strip-continuity-bar"></em></i>
+        </article>
+      </section>
+
       <section class="main-grid">
         <article class="panel map-panel">
           <div class="panel-head">
@@ -218,6 +241,15 @@
             <span id="event-count">0 eventos</span>
           </div>
           <div class="timeline" id="timeline"></div>
+        </article>
+
+        <article class="panel decision-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Decisao operacional</p><h2>Brief automatico</h2></div>
+            <button class="copy-button" id="copy-report" type="button">Copiar relatorio</button>
+          </div>
+          <div class="decision-brief" id="decision-brief"></div>
+          <span class="report-toast" id="report-toast">Relatorio copiado</span>
         </article>
       </section>
     </main>

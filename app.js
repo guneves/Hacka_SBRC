@@ -60,6 +60,18 @@ const els = {
   kpiEnvLabel: $("#kpi-env-label"),
   kpiMttr: $("#kpi-mttr"),
   kpiMttrLabel: $("#kpi-mttr-label"),
+  stripEnergy: $("#strip-energy"),
+  stripEnergyLabel: $("#strip-energy-label"),
+  stripEnergyBar: $("#strip-energy-bar"),
+  stripNetwork: $("#strip-network"),
+  stripNetworkLabel: $("#strip-network-label"),
+  stripNetworkBar: $("#strip-network-bar"),
+  stripEnvironment: $("#strip-environment"),
+  stripEnvironmentLabel: $("#strip-environment-label"),
+  stripEnvironmentBar: $("#strip-environment-bar"),
+  stripContinuity: $("#strip-continuity"),
+  stripContinuityLabel: $("#strip-continuity-label"),
+  stripContinuityBar: $("#strip-continuity-bar"),
   riskBadge: $("#risk-badge"),
   guardianPanel: $("#guardian-panel"),
   guardianTitle: $("#guardian-title"),
@@ -113,6 +125,9 @@ const els = {
   drawerDependencies: $("#drawer-dependencies"),
   drawerAnalysis: $("#drawer-analysis"),
   assetMiniChart: $("#asset-mini-chart"),
+  decisionBrief: $("#decision-brief"),
+  copyReport: $("#copy-report"),
+  reportToast: $("#report-toast"),
   charts: {
     timeline: $("#timeline-chart"),
     radar: $("#risk-radar"),
@@ -466,12 +481,14 @@ function render(analysis = analyze()) {
   els.activeScenario.textContent = scenarioLabels[state.scenario];
 
   renderKpis(analysis);
+  renderResilienceStrip(analysis);
   renderDomainCards(analysis);
   renderTwin(analysis);
   renderGuardian(analysis);
   renderAnalysis(analysis);
   renderAssets();
   renderTimeline();
+  renderDecisionBrief(analysis);
   renderSelectedAssetDetail(analysis);
   drawCharts(analysis);
 }
@@ -487,6 +504,29 @@ function renderKpis(analysis) {
   els.kpiEnvLabel.textContent = analysis.risks.environment >= 70 ? "Risco fisico alto" : analysis.risks.environment >= 38 ? "Anomalia ambiental" : "Sem anomalias";
   els.kpiMttr.textContent = `${analysis.mttr} min`;
   els.kpiMttrLabel.textContent = analysis.mttr > 60 ? "Requer equipe externa" : "Equipe local pronta";
+}
+
+function renderResilienceStrip(analysis) {
+  const items = [
+    [els.stripEnergy, els.stripEnergyLabel, els.stripEnergyBar, analysis.risks.energy, "Energia protegida", "Energia em atencao", "Energia critica"],
+    [els.stripNetwork, els.stripNetworkLabel, els.stripNetworkBar, analysis.risks.network, "Rede saudavel", "Rede instavel", "Rede critica"],
+    [els.stripEnvironment, els.stripEnvironmentLabel, els.stripEnvironmentBar, analysis.risks.environment, "Ambiente normal", "Ambiente anormal", "Ambiente critico"],
+    [els.stripContinuity, els.stripContinuityLabel, els.stripContinuityBar, analysis.risks.continuity, "Continuidade protegida", "Continuidade em risco", "Continuidade critica"],
+  ];
+
+  items.forEach(([card, label, bar, risk, normalText, warningText, dangerText]) => {
+    const level = levelForRisk(risk);
+    card.classList.remove("warning", "danger");
+    if (level !== "normal") card.classList.add(level);
+    label.textContent = level === "danger" ? dangerText : level === "warning" ? warningText : normalText;
+    bar.style.width = `${clamp(100 - risk, 4, 100)}%`;
+    bar.style.background =
+      level === "danger"
+        ? "linear-gradient(90deg, var(--red), #f07b72)"
+        : level === "warning"
+          ? "linear-gradient(90deg, var(--amber), #f2be52)"
+          : "linear-gradient(90deg, var(--green), #6ec99a)";
+  });
 }
 
 function renderDomainCards(analysis) {
@@ -674,6 +714,115 @@ function renderAnalysis(analysis) {
   els.analysisList.innerHTML = items
     .map((item) => `<div class="analysis-item"><strong>${item.title}</strong><p>${item.text}</p></div>`)
     .join("");
+}
+
+function renderDecisionBrief(analysis) {
+  const decision = buildDecisionBrief(analysis);
+  els.decisionBrief.innerHTML = [
+    briefItem("Estado", decision.state, decision.summary, "wide"),
+    briefItem("Servico afetado", decision.service, decision.serviceDetail, ""),
+    briefItem("Prioridade", decision.priority, decision.priorityDetail, ""),
+    briefItem("Proxima melhor acao", decision.nextAction, decision.actionDetail, "wide"),
+  ].join("");
+}
+
+function briefItem(label, title, text, extraClass) {
+  return `<div class="decision-item ${extraClass}"><span>${label}</span><strong>${title}</strong><p>${text}</p></div>`;
+}
+
+function buildDecisionBrief(analysis) {
+  const cause = analysis.root.label;
+  const severity = analysis.severity;
+  const service = cause === "nenhuma" ? "Operacao geral" : cause;
+  const serviceDetails = {
+    Energia: "Geracao, bateria e carga comunitaria exigem ajuste fino.",
+    Rede: "Latencia, perda de pacotes ou roteadores afetam cloud e comunicacao.",
+    Ambiente: "Sensores apontam evento fisico ou perda de cobertura ambiental.",
+    Seguranca: "Ruido logico sugere leitura falsa, ataque simples ou firmware instavel.",
+    "Operacao geral": "Nenhum dominio domina o risco neste momento.",
+  };
+
+  if (severity === "danger") {
+    return {
+      state: "Crise operacional",
+      summary: `Score ${analysis.operationalScore}, risco ${Math.round(analysis.risks.continuity)}% e MTTR estimado em ${analysis.mttr} minutos.`,
+      service,
+      serviceDetail: serviceDetails[service],
+      priority: "P1 imediato",
+      priorityDetail: "Abrir incidente, proteger servicos essenciais e registrar decisao.",
+      nextAction: firstActionFor(analysis),
+      actionDetail: "Executar agora e reavaliar a cada ciclo de telemetria.",
+    };
+  }
+
+  if (severity === "warning") {
+    return {
+      state: "Degradacao preventiva",
+      summary: `Score ${analysis.operationalScore}, autonomia ${minutesToLabel(analysis.autonomyMinutes)} e confianca ${analysis.root.confidence}%.`,
+      service,
+      serviceDetail: serviceDetails[service],
+      priority: "P2 monitorado",
+      priorityDetail: "Acompanhar tendencia antes de acionar equipe externa.",
+      nextAction: firstActionFor(analysis),
+      actionDetail: "Preparar contencao se o score cair abaixo de 60.",
+    };
+  }
+
+  return {
+    state: "Operacao saudavel",
+    summary: `Score ${analysis.operationalScore}, SLA ${analysis.availability.toFixed(2)}% e risco baixo.`,
+    service: "Todos os dominios",
+    serviceDetail: "Energia, rede, ambiente e edge operando dentro do baseline.",
+    priority: "P3 rotina",
+    priorityDetail: "Manter observabilidade e atualizar baseline com amostras saudaveis.",
+    nextAction: "Continuar previsao e sincronizacao edge/cloud.",
+    actionDetail: "Nenhuma intervencao imediata necessaria.",
+  };
+}
+
+function firstActionFor(analysis) {
+  return actionPlan(analysis)[0];
+}
+
+async function copyOperationalReport() {
+  const analysis = analyze();
+  const decision = buildDecisionBrief(analysis);
+  const report = [
+    "Sentinela Digital Pro - Relatorio operacional",
+    `Horario: ${formatTime()}`,
+    `Cenario: ${scenarioLabels[state.scenario]}`,
+    `Estado: ${decision.state}`,
+    `Score operacional: ${analysis.operationalScore}`,
+    `Risco de continuidade: ${Math.round(analysis.risks.continuity)}%`,
+    `Causa raiz provavel: ${analysis.root.label} (${analysis.root.confidence}% confianca)`,
+    `Autonomia energetica: ${minutesToLabel(analysis.autonomyMinutes)}`,
+    `SLA estimado: ${analysis.availability.toFixed(2)}%`,
+    `MTTR estimado: ${analysis.mttr} min`,
+    `Servico afetado: ${decision.service}`,
+    `Prioridade: ${decision.priority}`,
+    "",
+    "Proximas acoes:",
+    ...actionPlan(analysis).map((item, index) => `${index + 1}. ${item}`),
+  ].join("\n");
+
+  try {
+    await navigator.clipboard.writeText(report);
+  } catch {
+    const area = document.createElement("textarea");
+    area.value = report;
+    area.setAttribute("readonly", "");
+    area.style.position = "fixed";
+    area.style.left = "-9999px";
+    document.body.appendChild(area);
+    area.select();
+    document.execCommand("copy");
+    area.remove();
+  }
+
+  els.reportToast.classList.add("show");
+  window.setTimeout(() => els.reportToast.classList.remove("show"), 1800);
+  pushEvent("info", "Relatorio copiado", "Resumo operacional enviado para a area de transferencia.");
+  renderTimeline();
 }
 
 function renderAssets() {
@@ -1126,6 +1275,7 @@ function bindEvents() {
     });
   });
   els.drawerClose.addEventListener("click", closeAssetDetail);
+  els.copyReport.addEventListener("click", copyOperationalReport);
   $("[data-close-drawer]").addEventListener("click", closeAssetDetail);
   window.addEventListener("keydown", (event) => {
     if (event.key === "Escape" && els.drawer.classList.contains("open")) closeAssetDetail();
