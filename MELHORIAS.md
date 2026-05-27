@@ -19,3 +19,11 @@ O app passa a comunicar melhor o estado da comunidade em poucos segundos, alem d
 - [x] Integrar temperatura, umidade, vento, chuva, nuvens e radiacao solar ao motor operacional.
 - [x] Calcular geracao fotovoltaica estimada com modelo fisico simplificado baseado em irradiancia, vento e temperatura.
 - [x] Manter fallback simulado automatico para preservar a demo sem internet.
+
+## Rodada acessibilidade e explicacao
+
+- [x] Adicionar link de pular conteudo, foco visivel e suporte a preferencia de reducao de movimento.
+- [x] Explicar KPIs, graficos, cenarios e topologia com textos curtos de apoio.
+- [x] Anunciar mudancas importantes por regioes `aria-live`.
+- [x] Melhorar labels dinamicos dos nos da topologia para leitores de tela.
+- [x] Tornar a gaveta de detalhes mais adequada ao teclado, com foco inicial, retorno de foco e fechamento por `Esc`.

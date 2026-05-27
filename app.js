@@ -52,8 +52,12 @@ const baseline = {
 let state = structuredClone(baseline);
 let timer = null;
 let selectedAssetId = null;
+let lastFocusedElement = null;
+let lastAnnouncedState = "";
 
 const els = {
+  screenReaderStatus: $("#screen-reader-status"),
+  mainContent: $("#main-content"),
   status: $("#system-status"),
   syncMode: $("#sync-mode"),
   activeScenario: $("#active-scenario"),
@@ -644,6 +648,7 @@ function render(analysis = analyze()) {
   els.status.querySelector("i").style.background = severity === "danger" ? "var(--red)" : severity === "warning" ? "var(--amber)" : "var(--green)";
   els.syncMode.textContent = m.routersOnline < 3 ? "Edge local ativo, cloud degradada" : "Edge + Cloud sincronizado";
   els.activeScenario.textContent = scenarioLabels[state.scenario];
+  announceState(`${statusText}. Score ${analysis.operationalScore}. Causa raiz ${analysis.root.label}.`);
 
   renderWeatherSource();
   renderKpis(analysis);
@@ -685,6 +690,7 @@ function renderResilienceStrip(analysis) {
     card.classList.remove("warning", "danger");
     if (level !== "normal") card.classList.add(level);
     label.textContent = level === "danger" ? dangerText : level === "warning" ? warningText : normalText;
+    card.setAttribute("aria-label", `${label.textContent}. Risco ${Math.round(risk)} por cento.`);
     bar.style.width = `${clamp(100 - risk, 4, 100)}%`;
     bar.style.background =
       level === "danger"
@@ -693,6 +699,12 @@ function renderResilienceStrip(analysis) {
           ? "linear-gradient(90deg, var(--amber), #f2be52)"
           : "linear-gradient(90deg, var(--green), #6ec99a)";
   });
+}
+
+function announceState(message) {
+  if (message === lastAnnouncedState) return;
+  lastAnnouncedState = message;
+  els.screenReaderStatus.textContent = message;
 }
 
 function renderWeatherSource() {
@@ -706,8 +718,10 @@ function renderWeatherSource() {
     : "sem cache";
 
   els.liveWeatherToggle.checked = Boolean(source.enabled && current);
+  els.liveWeatherToggle.setAttribute("aria-checked", String(Boolean(source.enabled && current)));
   els.loadWeather.textContent = source.loading ? "Atualizando..." : "Atualizar Open-Meteo";
   els.loadWeather.disabled = source.loading;
+  els.loadWeather.setAttribute("aria-busy", String(source.loading));
   els.weatherSourceCopy.textContent =
     mode === "live"
       ? `Usando temperatura, vento, chuva, nuvens e radiacao solar reais para ajustar geracao PV e risco ambiental.`
@@ -780,6 +794,12 @@ function renderTwin(analysis) {
   els.nodeSensor.textContent = `${m.sensorsOnline}/${m.sensorsTotal}`;
   els.nodeSchool.textContent = state.sectors.find((s) => s.id === "school").status === "danger" ? "corte parcial" : "carga media";
   els.nodeClinic.textContent = analysis.severity === "danger" ? "protegido" : "prioritario";
+  setNodeLabel("solar-a", `Abrir detalhes do Campo solar A. Geracao ${m.generation.toFixed(1)} quilowatts. Risco energetico ${Math.round(analysis.risks.energy)} por cento.`);
+  setNodeLabel("battery-bank", `Abrir detalhes do banco de baterias. Carga ${Math.round(m.battery)} por cento. Autonomia ${minutesToLabel(analysis.autonomyMinutes)}.`);
+  setNodeLabel("mesh-tower", `Abrir detalhes da torre mesh. Latencia ${Math.round(m.latency)} milissegundos. ${m.routersOnline} de ${m.routersTotal} roteadores online.`);
+  setNodeLabel("env-array", `Abrir detalhes dos sensores ambientais. Temperatura ${Math.round(m.temperature)} graus. ${m.sensorsOnline} de ${m.sensorsTotal} sensores online.`);
+  setNodeLabel("school-load", `Abrir detalhes da escola comunitaria. Estado ${levelLabel(state.sectors.find((s) => s.id === "school").status)}.`);
+  setNodeLabel("clinic-load", `Abrir detalhes do posto de saude. Estado ${analysis.severity === "danger" ? "protegido em crise" : "prioritario"}.`);
 
   $$("[data-link]").forEach((link) => {
     link.classList.remove("warning", "danger");
@@ -790,6 +810,11 @@ function renderTwin(analysis) {
       link.classList.add("warning");
     }
   });
+}
+
+function setNodeLabel(assetId, label) {
+  const node = $(`.node[data-asset="${assetId}"]`);
+  if (node) node.setAttribute("aria-label", label);
 }
 
 function renderGuardian(analysis) {
@@ -1010,6 +1035,8 @@ async function copyOperationalReport() {
   }
 
   els.reportToast.classList.add("show");
+  els.reportToast.textContent = "Relatorio copiado para a area de transferencia";
+  announceState("Relatorio operacional copiado para a area de transferencia.");
   window.setTimeout(() => els.reportToast.classList.remove("show"), 1800);
   pushEvent("info", "Relatorio copiado", "Resumo operacional enviado para a area de transferencia.");
   renderTimeline();
@@ -1058,17 +1085,24 @@ function openAssetDetail(assetId) {
   const asset = state.assets.find((item) => item.id === assetId);
   if (!asset) return;
 
+  lastFocusedElement = document.activeElement;
   els.drawer.classList.add("open");
   els.drawer.setAttribute("aria-hidden", "false");
+  els.mainContent.setAttribute("aria-hidden", "true");
   pushEvent("info", asset.name, `${asset.type} em ${asset.sector}. Saude ${asset.health.toFixed(0)}%. ${asset.action}.`);
   renderSelectedAssetDetail(analyze());
   renderTimeline();
+  window.setTimeout(() => els.drawer.querySelector(".drawer-panel").focus(), 0);
 }
 
 function closeAssetDetail() {
   els.drawer.classList.remove("open");
   els.drawer.setAttribute("aria-hidden", "true");
+  els.mainContent.removeAttribute("aria-hidden");
   selectedAssetId = null;
+  if (lastFocusedElement && typeof lastFocusedElement.focus === "function") {
+    lastFocusedElement.focus();
+  }
 }
 
 function renderSelectedAssetDetail(analysis = analyze()) {
@@ -1108,6 +1142,26 @@ function renderSelectedAssetDetail(analysis = analyze()) {
     .join("");
 
   drawAssetMiniChart(asset.id, analysis);
+}
+
+function trapDrawerFocus(event) {
+  if (event.key !== "Tab" || !els.drawer.classList.contains("open")) return;
+
+  const focusable = Array.from(
+    els.drawer.querySelectorAll('button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])')
+  ).filter((element) => !element.hasAttribute("disabled") && element.offsetParent !== null);
+
+  if (!focusable.length) return;
+
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
 }
 
 function assetMetricCards(assetId, analysis) {
@@ -1491,6 +1545,7 @@ function bindEvents() {
   els.copyReport.addEventListener("click", copyOperationalReport);
   $("[data-close-drawer]").addEventListener("click", closeAssetDetail);
   window.addEventListener("keydown", (event) => {
+    trapDrawerFocus(event);
     if (event.key === "Escape" && els.drawer.classList.contains("open")) closeAssetDetail();
   });
   window.addEventListener("resize", () => render(analyze()));

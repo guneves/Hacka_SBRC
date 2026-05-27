@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <main class="app-shell">
+    <a class="skip-link" href="#main-content">Pular para o painel principal</a>
+    <div class="sr-only" id="screen-reader-status" aria-live="polite"></div>
+    <main class="app-shell" id="main-content">
       <header class="topbar">
         <div class="brand">
           <p class="eyebrow">Centro de operacoes comunitario</p>
@@ -15,7 +17,7 @@
           <p class="subtitle">Gemeo digital, telemetria, previsao, incidentes e resposta automatica.</p>
         </div>
         <div class="topbar-actions">
-          <span class="status-pill" id="system-status"><i></i> Operacao normal</span>
+          <span class="status-pill" id="system-status" role="status" aria-live="polite"><i></i> Operacao normal</span>
           <span class="sync-pill" id="sync-mode">Edge + Cloud sincronizado</span>
           <button class="icon-button" id="pause-button" type="button" title="Pausar simulacao" aria-label="Pausar simulacao">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
@@ -27,30 +29,35 @@
       </header>
 
       <section class="kpi-grid" aria-label="Indicadores principais">
-        <article class="kpi-card">
+        <article class="kpi-card" aria-describedby="kpi-score-help">
           <p>Indice operacional</p>
           <strong id="kpi-score">98</strong>
           <span id="kpi-score-label">Normal</span>
+          <small id="kpi-score-help">Quanto mais perto de 100, mais segura esta a operacao.</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card" aria-describedby="kpi-autonomy-help">
           <p>Autonomia energetica</p>
           <strong id="kpi-autonomy">7h 20m</strong>
           <span id="kpi-autonomy-label">Baterias saudaveis</span>
+          <small id="kpi-autonomy-help">Tempo estimado ate a bateria atingir nivel critico.</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card" aria-describedby="kpi-availability-help">
           <p>Disponibilidade de rede</p>
           <strong id="kpi-availability">99.4%</strong>
           <span id="kpi-availability-label">SLA dentro da meta</span>
+          <small id="kpi-availability-help">Estimativa de estabilidade da internet comunitaria.</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card" aria-describedby="kpi-env-help">
           <p>Risco ambiental</p>
           <strong id="kpi-env-risk">8%</strong>
           <span id="kpi-env-label">Sem anomalias</span>
+          <small id="kpi-env-help">Combina calor, fumaca, ar e sensores offline.</small>
         </article>
-        <article class="kpi-card">
+        <article class="kpi-card" aria-describedby="kpi-mttr-help">
           <p>MTTR estimado</p>
           <strong id="kpi-mttr">18 min</strong>
           <span id="kpi-mttr-label">Equipe local pronta</span>
+          <small id="kpi-mttr-help">Tempo medio previsto para recuperar o servico.</small>
         </article>
       </section>
 
@@ -58,22 +65,22 @@
         <article class="strip-card" id="strip-energy">
           <span>Energia</span>
           <b id="strip-energy-label">Estavel</b>
-          <i><em id="strip-energy-bar"></em></i>
+          <i aria-hidden="true"><em id="strip-energy-bar"></em></i>
         </article>
         <article class="strip-card" id="strip-network">
           <span>Rede</span>
           <b id="strip-network-label">Online</b>
-          <i><em id="strip-network-bar"></em></i>
+          <i aria-hidden="true"><em id="strip-network-bar"></em></i>
         </article>
         <article class="strip-card" id="strip-environment">
           <span>Ambiente</span>
           <b id="strip-environment-label">Normal</b>
-          <i><em id="strip-environment-bar"></em></i>
+          <i aria-hidden="true"><em id="strip-environment-bar"></em></i>
         </article>
         <article class="strip-card" id="strip-continuity">
           <span>Continuidade</span>
           <b id="strip-continuity-label">Protegida</b>
-          <i><em id="strip-continuity-bar"></em></i>
+          <i aria-hidden="true"><em id="strip-continuity-bar"></em></i>
         </article>
       </section>
 
@@ -86,11 +93,11 @@
         <div class="source-controls">
           <label>
             Latitude
-            <input id="latitude-input" type="number" step="0.0001" value="-12.9777" />
+            <input id="latitude-input" type="number" step="0.0001" value="-12.9777" aria-describedby="location-help" />
           </label>
           <label>
             Longitude
-            <input id="longitude-input" type="number" step="0.0001" value="-38.5016" />
+            <input id="longitude-input" type="number" step="0.0001" value="-38.5016" aria-describedby="location-help" />
           </label>
           <button class="copy-button" id="load-weather" type="button">Atualizar Open-Meteo</button>
           <label class="switch-control">
@@ -98,8 +105,9 @@
             <span></span>
             Usar dados reais
           </label>
+          <small class="control-help" id="location-help">Padrao: Salvador, BA. A API e opcional e o fallback mantem a demo ativa.</small>
         </div>
-        <div class="source-status" id="weather-source-status">
+        <div class="source-status" id="weather-source-status" role="status" aria-live="polite">
           <span class="tag warning">fallback</span>
           <b>Simulacao local</b>
           <small>Sem chamada externa neste ciclo</small>
@@ -115,7 +123,8 @@
             </div>
             <span id="active-scenario">Cenario normal</span>
           </div>
-          <div class="digital-twin" id="digital-twin" aria-label="Mapa operacional">
+          <p class="panel-help">Clique em um membro da comunidade para abrir telemetria, dependencias e acoes recomendadas.</p>
+          <div class="digital-twin" id="digital-twin" aria-label="Mapa operacional da comunidade">
             <svg class="topology-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <path data-link="solar-storage" d="M18 24 C28 18, 35 24, 43 37" />
               <path data-link="storage-tower" d="M43 37 C54 30, 66 26, 78 24" />
@@ -125,22 +134,22 @@
               <path data-link="sensor-clinic" d="M22 77 C37 84, 52 82, 67 72" />
             </svg>
 
-            <button class="node node-solar" data-asset="solar-a" type="button">
+            <button class="node node-solar" data-asset="solar-a" type="button" aria-label="Abrir detalhes do campo solar A">
               <b>Solar A</b><span id="node-solar">4.8 kW</span>
             </button>
-            <button class="node node-storage" data-asset="battery-bank" type="button">
+            <button class="node node-storage" data-asset="battery-bank" type="button" aria-label="Abrir detalhes do banco de baterias">
               <b>Baterias</b><span id="node-storage">83%</span>
             </button>
-            <button class="node node-tower" data-asset="mesh-tower" type="button">
+            <button class="node node-tower" data-asset="mesh-tower" type="button" aria-label="Abrir detalhes da torre mesh">
               <b>Torre mesh</b><span id="node-tower">32 ms</span>
             </button>
-            <button class="node node-sensor" data-asset="env-array" type="button">
+            <button class="node node-sensor" data-asset="env-array" type="button" aria-label="Abrir detalhes da malha de sensores ambientais">
               <b>Sensores</b><span id="node-sensor">8/8</span>
             </button>
-            <button class="node node-school" data-asset="school-load" type="button">
+            <button class="node node-school" data-asset="school-load" type="button" aria-label="Abrir detalhes da escola comunitaria">
               <b>Escola</b><span id="node-school">carga media</span>
             </button>
-            <button class="node node-clinic critical" data-asset="clinic-load" type="button">
+            <button class="node node-clinic critical" data-asset="clinic-load" type="button" aria-label="Abrir detalhes do posto de saude">
               <b>Posto</b><span id="node-clinic">prioritario</span>
             </button>
           </div>
@@ -168,7 +177,7 @@
             <div class="phase" data-phase="protect"><span>3</span><b>Proteger</b><small id="phase-protect">aguardando</small></div>
             <div class="phase" data-phase="recover"><span>4</span><b>Recuperar</b><small id="phase-recover">aguardando</small></div>
           </div>
-          <ol class="action-plan" id="action-plan"></ol>
+          <ol class="action-plan" id="action-plan" aria-label="Plano automatico de resposta"></ol>
         </article>
       </section>
 
@@ -205,25 +214,29 @@
             <div><p class="eyebrow">Series temporais</p><h2>Telemetria e previsao</h2></div>
             <span id="history-size">0 amostras</span>
           </div>
-          <canvas id="timeline-chart" height="260" aria-label="Grafico temporal"></canvas>
+          <p class="chart-summary" id="timeline-chart-summary">Grafico compara bateria, risco e latencia ao longo do tempo.</p>
+          <canvas id="timeline-chart" height="260" aria-label="Grafico temporal" role="img" aria-describedby="timeline-chart-summary"></canvas>
         </article>
         <article class="panel chart-panel">
           <div class="panel-head">
             <div><p class="eyebrow">Multirrisco</p><h2>Radar operacional</h2></div>
           </div>
-          <canvas id="risk-radar" height="260" aria-label="Radar de risco"></canvas>
+          <p class="chart-summary" id="risk-radar-summary">Radar mostra risco relativo de energia, rede, ambiente, seguranca e continuidade.</p>
+          <canvas id="risk-radar" height="260" aria-label="Radar de risco" role="img" aria-describedby="risk-radar-summary"></canvas>
         </article>
         <article class="panel chart-panel">
           <div class="panel-head">
             <div><p class="eyebrow">SLA</p><h2>Disponibilidade por servico</h2></div>
           </div>
-          <canvas id="sla-chart" height="260" aria-label="Grafico de SLA"></canvas>
+          <p class="chart-summary" id="sla-chart-summary">Barras indicam disponibilidade estimada por servico.</p>
+          <canvas id="sla-chart" height="260" aria-label="Grafico de SLA" role="img" aria-describedby="sla-chart-summary"></canvas>
         </article>
         <article class="panel chart-panel">
           <div class="panel-head">
             <div><p class="eyebrow">Capacidade</p><h2>Energia por setor</h2></div>
           </div>
-          <canvas id="capacity-chart" height="260" aria-label="Grafico de capacidade"></canvas>
+          <p class="chart-summary" id="capacity-chart-summary">Grafico compara carga e reserva energetica por setor.</p>
+          <canvas id="capacity-chart" height="260" aria-label="Grafico de capacidade" role="img" aria-describedby="capacity-chart-summary"></canvas>
         </article>
       </section>
 
@@ -232,7 +245,8 @@
           <div class="panel-head">
             <div><p class="eyebrow">Laboratorio de falhas</p><h2>Cenarios controlados</h2></div>
           </div>
-          <div class="scenario-buttons">
+          <p class="panel-help">Os cenarios simulam incidentes comuns e atualizam todo o painel em tempo real.</p>
+          <div class="scenario-buttons" aria-label="Cenarios de falha simulados">
             <button type="button" data-scenario="storm"><b>Tempestade</b><span>Nuvens, consumo alto e radio instavel</span></button>
             <button type="button" data-scenario="network"><b>Backhaul degradado</b><span>Latencia, perda e roteadores caindo</span></button>
             <button type="button" data-scenario="environment"><b>Alerta ambiental</b><span>Calor, fumaca e sensores intermitentes</span></button>
@@ -246,7 +260,7 @@
           <div class="panel-head">
             <div><p class="eyebrow">Analise rebuscada</p><h2>Diagnostico e manutencao</h2></div>
           </div>
-          <div class="analysis-list" id="analysis-list"></div>
+          <div class="analysis-list" id="analysis-list" aria-live="polite"></div>
         </article>
 
         <article class="panel inventory-panel wide">
@@ -269,7 +283,7 @@
             <div><p class="eyebrow">Eventos</p><h2>Linha do tempo</h2></div>
             <span id="event-count">0 eventos</span>
           </div>
-          <div class="timeline" id="timeline"></div>
+          <div class="timeline" id="timeline" aria-live="polite"></div>
         </article>
 
         <article class="panel decision-panel">
@@ -277,15 +291,15 @@
             <div><p class="eyebrow">Decisao operacional</p><h2>Brief automatico</h2></div>
             <button class="copy-button" id="copy-report" type="button">Copiar relatorio</button>
           </div>
-          <div class="decision-brief" id="decision-brief"></div>
-          <span class="report-toast" id="report-toast">Relatorio copiado</span>
+          <div class="decision-brief" id="decision-brief" aria-live="polite"></div>
+          <span class="report-toast" id="report-toast" role="status">Relatorio copiado</span>
         </article>
       </section>
     </main>
 
     <section class="asset-drawer" id="asset-drawer" aria-hidden="true">
       <div class="drawer-backdrop" data-close-drawer></div>
-      <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+      <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description" tabindex="-1">
         <header class="drawer-header">
           <div>
             <p class="eyebrow" id="drawer-type">Ativo comunitario</p>

@@ -23,6 +23,11 @@
   box-sizing: border-box;
 }
 
+*:focus-visible {
+  outline: 3px solid rgba(40, 95, 214, 0.75);
+  outline-offset: 3px;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
@@ -36,6 +41,34 @@ body {
 
 button {
   font: inherit;
+}
+
+.sr-only {
+  position: absolute;
+  overflow: hidden;
+  width: 1px;
+  height: 1px;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+.skip-link {
+  position: fixed;
+  left: 18px;
+  top: 14px;
+  z-index: 50;
+  border-radius: 8px;
+  background: var(--ink);
+  color: #fff;
+  padding: 10px 13px;
+  font-weight: 900;
+  transform: translateY(-160%);
+  transition: transform 160ms ease;
+}
+
+.skip-link:focus {
+  transform: translateY(0);
 }
 
 .app-shell {
@@ -291,6 +324,14 @@ h3 {
   font-weight: 760;
 }
 
+.control-help {
+  grid-column: 1 / -1;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 720;
+  line-height: 1.35;
+}
+
 .switch-control {
   display: flex !important;
   align-items: center;
@@ -395,6 +436,14 @@ h3 {
   font-weight: 720;
 }
 
+.kpi-card small {
+  display: block;
+  margin-top: 9px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
 .main-grid {
   grid-template-columns: minmax(0, 1.55fr) minmax(340px, 0.85fr);
   margin-bottom: 16px;
@@ -408,6 +457,19 @@ h3 {
   justify-content: space-between;
   gap: 14px;
   margin-bottom: 16px;
+}
+
+.panel-help,
+.chart-summary {
+  margin: -6px 0 14px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 680;
+  line-height: 1.4;
+}
+
+.chart-summary {
+  margin: -4px 0 10px;
 }
 
 .digital-twin {
@@ -483,6 +545,11 @@ h3 {
 
 .node:hover {
   transform: translateY(-3px);
+}
+
+.node:focus-visible {
+  transform: translateY(-3px);
+  box-shadow: 0 0 0 4px rgba(40, 95, 214, 0.18), 0 12px 30px rgba(23, 33, 29, 0.14);
 }
 
 .node b {
@@ -823,6 +890,11 @@ h3 {
   cursor: pointer;
 }
 
+.copy-button:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+
 .decision-brief {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -879,6 +951,17 @@ h3 {
 .report-toast.show {
   opacity: 1;
   transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 .analysis-list {
