@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sentinela Digital Pro</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <p class="eyebrow">Centro de operacoes comunitario</p>
+          <h1>Sentinela Digital Pro</h1>
+          <p class="subtitle">Gemeo digital, telemetria, previsao, incidentes e resposta automatica.</p>
+        </div>
+        <div class="topbar-actions">
+          <span class="status-pill" id="system-status"><i></i> Operacao normal</span>
+          <span class="sync-pill" id="sync-mode">Edge + Cloud sincronizado</span>
+          <button class="icon-button" id="pause-button" type="button" title="Pausar simulacao" aria-label="Pausar simulacao">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
+          </button>
+          <button class="icon-button" id="reset-button" type="button" title="Reiniciar simulacao" aria-label="Reiniciar simulacao">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v6h6" /></svg>
+          </button>
+        </div>
+      </header>
+
+      <section class="kpi-grid" aria-label="Indicadores principais">
+        <article class="kpi-card">
+          <p>Indice operacional</p>
+          <strong id="kpi-score">98</strong>
+          <span id="kpi-score-label">Normal</span>
+        </article>
+        <article class="kpi-card">
+          <p>Autonomia energetica</p>
+          <strong id="kpi-autonomy">7h 20m</strong>
+          <span id="kpi-autonomy-label">Baterias saudaveis</span>
+        </article>
+        <article class="kpi-card">
+          <p>Disponibilidade de rede</p>
+          <strong id="kpi-availability">99.4%</strong>
+          <span id="kpi-availability-label">SLA dentro da meta</span>
+        </article>
+        <article class="kpi-card">
+          <p>Risco ambiental</p>
+          <strong id="kpi-env-risk">8%</strong>
+          <span id="kpi-env-label">Sem anomalias</span>
+        </article>
+        <article class="kpi-card">
+          <p>MTTR estimado</p>
+          <strong id="kpi-mttr">18 min</strong>
+          <span id="kpi-mttr-label">Equipe local pronta</span>
+        </article>
+      </section>
+
+      <section class="main-grid">
+        <article class="panel map-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Gemeo digital</p>
+              <h2>Topologia viva da comunidade</h2>
+            </div>
+            <span id="active-scenario">Cenario normal</span>
+          </div>
+          <div class="digital-twin" id="digital-twin" aria-label="Mapa operacional">
+            <svg class="topology-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+              <path data-link="solar-storage" d="M18 24 C28 18, 35 24, 43 37" />
+              <path data-link="storage-tower" d="M43 37 C54 30, 66 26, 78 24" />
+              <path data-link="tower-clinic" d="M78 24 C78 42, 72 58, 67 72" />
+              <path data-link="tower-school" d="M78 24 C65 40, 55 50, 48 60" />
+              <path data-link="storage-sensor" d="M43 37 C32 48, 25 61, 22 77" />
+              <path data-link="sensor-clinic" d="M22 77 C37 84, 52 82, 67 72" />
+            </svg>
+
+            <button class="node node-solar" data-asset="solar-a" type="button">
+              <b>Solar A</b><span id="node-solar">4.8 kW</span>
+            </button>
+            <button class="node node-storage" data-asset="battery-bank" type="button">
+              <b>Baterias</b><span id="node-storage">83%</span>
+            </button>
+            <button class="node node-tower" data-asset="mesh-tower" type="button">
+              <b>Torre mesh</b><span id="node-tower">32 ms</span>
+            </button>
+            <button class="node node-sensor" data-asset="env-array" type="button">
+              <b>Sensores</b><span id="node-sensor">8/8</span>
+            </button>
+            <button class="node node-school" data-asset="school-load" type="button">
+              <b>Escola</b><span id="node-school">carga media</span>
+            </button>
+            <button class="node node-clinic critical" data-asset="clinic-load" type="button">
+              <b>Posto</b><span id="node-clinic">prioritario</span>
+            </button>
+          </div>
+        </article>
+
+        <article class="panel command-panel" id="guardian-panel">
+          <div class="panel-head">
+            <div>
+              <p class="eyebrow">Modo Guardiao</p>
+              <h2>Comando autonomo</h2>
+            </div>
+            <span class="risk-badge" id="risk-badge">12%</span>
+          </div>
+          <div class="guardian-status">
+            <strong id="guardian-title">Sistema estavel</strong>
+            <p id="guardian-copy">A operacao esta dentro dos limites. O modelo preditivo segue em observacao continua.</p>
+          </div>
+          <div class="forecast-card">
+            <span>Previsao</span>
+            <b id="forecast-text">Sem risco de colapso nas proximas 3 horas.</b>
+          </div>
+          <div class="runbook">
+            <div class="phase" data-phase="detect"><span>1</span><b>Detectar</b><small id="phase-detect">ativo</small></div>
+            <div class="phase" data-phase="isolate"><span>2</span><b>Isolar</b><small id="phase-isolate">aguardando</small></div>
+            <div class="phase" data-phase="protect"><span>3</span><b>Proteger</b><small id="phase-protect">aguardando</small></div>
+            <div class="phase" data-phase="recover"><span>4</span><b>Recuperar</b><small id="phase-recover">aguardando</small></div>
+          </div>
+          <ol class="action-plan" id="action-plan"></ol>
+        </article>
+      </section>
+
+      <section class="metrics-grid">
+        <article class="metric-card" id="energy-card">
+          <div class="metric-head"><span class="metric-icon energy">PV</span><div><p>Energia</p><h3 id="energy-status">Estavel</h3></div></div>
+          <div class="metric-row"><b id="battery-value">83%</b><span>Bateria</span></div>
+          <div class="progress"><i id="battery-bar"></i></div>
+          <div class="metric-split"><span id="generation-value">4.8 kW gerados</span><span id="load-value">2.1 kW consumidos</span></div>
+        </article>
+        <article class="metric-card" id="network-card">
+          <div class="metric-head"><span class="metric-icon network">IP</span><div><p>Rede</p><h3 id="network-status">Online</h3></div></div>
+          <div class="metric-row"><b id="latency-value">32 ms</b><span>Latencia</span></div>
+          <div class="progress"><i id="network-bar"></i></div>
+          <div class="metric-split"><span id="packet-loss">0.2% perda</span><span id="routers-online">5/5 roteadores</span></div>
+        </article>
+        <article class="metric-card" id="environment-card">
+          <div class="metric-head"><span class="metric-icon env">AQ</span><div><p>Ambiente</p><h3 id="environment-status">Normal</h3></div></div>
+          <div class="metric-row"><b id="temperature-value">24 C</b><span>Temperatura</span></div>
+          <div class="progress"><i id="environment-bar"></i></div>
+          <div class="metric-split"><span id="air-quality">92 AQI</span><span id="sensors-online">8/8 sensores</span></div>
+        </article>
+        <article class="metric-card" id="ops-card">
+          <div class="metric-head"><span class="metric-icon ops">AI</span><div><p>Analise</p><h3 id="ops-status">Sem anomalia</h3></div></div>
+          <div class="metric-row"><b id="anomaly-value">0.8s</b><span>Desvio maximo</span></div>
+          <div class="progress"><i id="ops-bar"></i></div>
+          <div class="metric-split"><span id="root-cause">Causa: nenhuma</span><span id="confidence">92% confianca</span></div>
+        </article>
+      </section>
+
+      <section class="analytics-grid">
+        <article class="panel chart-panel wide">
+          <div class="panel-head">
+            <div><p class="eyebrow">Series temporais</p><h2>Telemetria e previsao</h2></div>
+            <span id="history-size">0 amostras</span>
+          </div>
+          <canvas id="timeline-chart" height="260" aria-label="Grafico temporal"></canvas>
+        </article>
+        <article class="panel chart-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Multirrisco</p><h2>Radar operacional</h2></div>
+          </div>
+          <canvas id="risk-radar" height="260" aria-label="Radar de risco"></canvas>
+        </article>
+        <article class="panel chart-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">SLA</p><h2>Disponibilidade por servico</h2></div>
+          </div>
+          <canvas id="sla-chart" height="260" aria-label="Grafico de SLA"></canvas>
+        </article>
+        <article class="panel chart-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Capacidade</p><h2>Energia por setor</h2></div>
+          </div>
+          <canvas id="capacity-chart" height="260" aria-label="Grafico de capacidade"></canvas>
+        </article>
+      </section>
+
+      <section class="ops-grid">
+        <article class="panel scenario-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Laboratorio de falhas</p><h2>Cenarios controlados</h2></div>
+          </div>
+          <div class="scenario-buttons">
+            <button type="button" data-scenario="storm"><b>Tempestade</b><span>Nuvens, consumo alto e radio instavel</span></button>
+            <button type="button" data-scenario="network"><b>Backhaul degradado</b><span>Latencia, perda e roteadores caindo</span></button>
+            <button type="button" data-scenario="environment"><b>Alerta ambiental</b><span>Calor, fumaca e sensores intermitentes</span></button>
+            <button type="button" data-scenario="cyber"><b>Falha cibernetica</b><span>Ruido, perda de pacotes e leituras suspeitas</span></button>
+            <button type="button" data-scenario="cascade"><b>Falha em cascata</b><span>Crise simultanea com priorizacao automatica</span></button>
+            <button type="button" data-scenario="recover"><b>Recuperar</b><span>Restaura parametros normais</span></button>
+          </div>
+        </article>
+
+        <article class="panel analysis-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Analise rebuscada</p><h2>Diagnostico e manutencao</h2></div>
+          </div>
+          <div class="analysis-list" id="analysis-list"></div>
+        </article>
+
+        <article class="panel inventory-panel wide">
+          <div class="panel-head">
+            <div><p class="eyebrow">Inventario</p><h2>Ativos, saude e prioridade</h2></div>
+            <span id="asset-count">6 ativos</span>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th>Ativo</th><th>Tipo</th><th>Setor</th><th>Saude</th><th>Status</th><th>Proxima acao</th></tr>
+              </thead>
+              <tbody id="asset-table"></tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="panel timeline-panel">
+          <div class="panel-head">
+            <div><p class="eyebrow">Eventos</p><h2>Linha do tempo</h2></div>
+            <span id="event-count">0 eventos</span>
+          </div>
+          <div class="timeline" id="timeline"></div>
+        </article>
+      </section>
+    </main>
+
+    <template id="event-template">
+      <div class="event">
+        <span class="event-level"></span>
+        <div><strong></strong><p></p></div>
+        <time></time>
+      </div>
+    </template>
+
+    <script src="app.js"></script>
+  </body>
+</html>
