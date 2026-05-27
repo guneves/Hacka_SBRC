@@ -9,6 +9,7 @@ Aplicacao 100% via software para demonstrar um centro de operacoes de infraestru
 - Sensores ambientais com temperatura, fumaca, qualidade do ar e disponibilidade da malha.
 - Inventario de ativos com saude, prioridade e proxima acao.
 - Incidentes com severidade, causa raiz provavel, MTTR e plano de resposta.
+- Visualizacao detalhada de cada parte da topologia viva ao clicar nos nos do mapa.
 
 ## Diferencial
 
@@ -44,6 +45,8 @@ Use os botoes de **Cenarios controlados**:
 - **Falha cibernetica**: ruido de rede e leituras suspeitas.
 - **Falha em cascata**: crise simultanea com priorizacao automatica.
 - **Recuperar**: restaura a operacao normal.
+
+Clique nos membros da **Topologia viva da comunidade** para abrir a visao detalhada do ativo, com telemetria local, dependencias, diagnostico, impacto comunitario e mini grafico.
 
 ## Arquivos
 

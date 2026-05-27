@@ -42,6 +42,7 @@ const baseline = {
 
 let state = structuredClone(baseline);
 let timer = null;
+let selectedAssetId = null;
 
 const els = {
   status: $("#system-status"),
@@ -98,6 +99,20 @@ const els = {
   timeline: $("#timeline"),
   eventCount: $("#event-count"),
   template: $("#event-template"),
+  drawer: $("#asset-drawer"),
+  drawerClose: $("#drawer-close"),
+  drawerTitle: $("#drawer-title"),
+  drawerType: $("#drawer-type"),
+  drawerSector: $("#drawer-sector"),
+  drawerHealth: $("#drawer-health"),
+  drawerHealthRing: $("#drawer-health-ring"),
+  drawerStatus: $("#drawer-status"),
+  drawerDescription: $("#drawer-description"),
+  drawerMetrics: $("#drawer-metrics"),
+  drawerUpdated: $("#drawer-updated"),
+  drawerDependencies: $("#drawer-dependencies"),
+  drawerAnalysis: $("#drawer-analysis"),
+  assetMiniChart: $("#asset-mini-chart"),
   charts: {
     timeline: $("#timeline-chart"),
     radar: $("#risk-radar"),
@@ -113,6 +128,57 @@ const scenarioLabels = {
   environment: "Alerta ambiental",
   cyber: "Falha cibernetica",
   cascade: "Falha em cascata",
+};
+
+const assetDetails = {
+  "solar-a": {
+    description: "Campo fotovoltaico responsavel pela maior parte da geracao diurna da comunidade.",
+    dependencies: [
+      ["Banco de baterias", "recebe excedente e sustenta operacao noturna"],
+      ["Quadro escola", "carga flexivel que pode ser reduzida em crise"],
+      ["Carga posto", "mantem prioridade energetica em emergencias"],
+    ],
+  },
+  "battery-bank": {
+    description: "Reserva energetica central que protege servicos essenciais durante baixa geracao.",
+    dependencies: [
+      ["Campo solar A", "fonte principal de recarga"],
+      ["Torre mesh", "mantem comunicacao quando a rede externa falha"],
+      ["Carga posto", "consumidor critico sempre priorizado"],
+    ],
+  },
+  "mesh-tower": {
+    description: "No de comunicacao principal da internet comunitaria e da sincronizacao com a nuvem.",
+    dependencies: [
+      ["Banco de baterias", "energia de backup para manter radio e roteador"],
+      ["Malha ambiental", "transporta telemetria dos sensores"],
+      ["Carga posto", "garante canal prioritario para atendimento local"],
+    ],
+  },
+  "env-array": {
+    description: "Rede de sensores ambientais para calor, fumaca, umidade e qualidade do ar.",
+    dependencies: [
+      ["Torre mesh", "envia alertas para o painel e cloud"],
+      ["Carga posto", "orienta resposta sanitaria em eventos de risco"],
+      ["Banco de baterias", "mantem leitura durante interrupcao energetica"],
+    ],
+  },
+  "school-load": {
+    description: "Carga comunitaria flexivel: pode reduzir consumo para preservar sistemas criticos.",
+    dependencies: [
+      ["Banco de baterias", "recebe limite de consumo conforme autonomia"],
+      ["Campo solar A", "usa excedente em operacao normal"],
+      ["Torre mesh", "mantem conectividade educacional comunitaria"],
+    ],
+  },
+  "clinic-load": {
+    description: "Ponto critico da comunidade, protegido pelo Modo Guardiao em qualquer crise.",
+    dependencies: [
+      ["Banco de baterias", "reserva prioritaria de emergencia"],
+      ["Torre mesh", "canal de comunicacao essencial"],
+      ["Malha ambiental", "alertas de risco fisico para triagem local"],
+    ],
+  },
 };
 
 function clamp(value, min, max) {
@@ -406,6 +472,7 @@ function render(analysis = analyze()) {
   renderAnalysis(analysis);
   renderAssets();
   renderTimeline();
+  renderSelectedAssetDetail(analysis);
   drawCharts(analysis);
 }
 
@@ -647,6 +714,198 @@ function renderTimeline() {
   els.historySize.textContent = `${state.history.length} amostras`;
 }
 
+function openAssetDetail(assetId) {
+  selectedAssetId = assetId;
+  const asset = state.assets.find((item) => item.id === assetId);
+  if (!asset) return;
+
+  els.drawer.classList.add("open");
+  els.drawer.setAttribute("aria-hidden", "false");
+  pushEvent("info", asset.name, `${asset.type} em ${asset.sector}. Saude ${asset.health.toFixed(0)}%. ${asset.action}.`);
+  renderSelectedAssetDetail(analyze());
+  renderTimeline();
+}
+
+function closeAssetDetail() {
+  els.drawer.classList.remove("open");
+  els.drawer.setAttribute("aria-hidden", "true");
+  selectedAssetId = null;
+}
+
+function renderSelectedAssetDetail(analysis = analyze()) {
+  if (!selectedAssetId || !els.drawer.classList.contains("open")) return;
+
+  const asset = state.assets.find((item) => item.id === selectedAssetId);
+  if (!asset) return;
+
+  const detail = assetDetails[asset.id];
+  const metrics = assetMetricCards(asset.id, analysis);
+  const status = levelLabel(asset.status);
+  const color = asset.status === "danger" ? "var(--red)" : asset.status === "warning" ? "var(--amber)" : "var(--green)";
+  const angle = Math.round((asset.health / 100) * 360);
+
+  els.drawerTitle.textContent = asset.name;
+  els.drawerType.textContent = `${asset.type} · criticidade ${asset.criticality}`;
+  els.drawerSector.textContent = `Setor ${asset.sector}`;
+  els.drawerHealth.textContent = `${asset.health.toFixed(0)}%`;
+  els.drawerHealthRing.style.background =
+    `radial-gradient(circle at center, #fff 0 57%, transparent 58%), conic-gradient(${color} 0deg, ${color} ${angle}deg, #dfe7e1 ${angle + 1}deg)`;
+  els.drawerStatus.className = `tag ${asset.status}`;
+  els.drawerStatus.textContent = status;
+  els.drawerDescription.textContent = detail.description;
+  els.drawerUpdated.textContent = `tick ${state.tick} · ${formatTime()}`;
+
+  els.drawerMetrics.innerHTML = metrics
+    .map((metric) => `<div class="detail-metric"><span>${metric.label}</span><strong>${metric.value}</strong></div>`)
+    .join("");
+
+  els.drawerDependencies.innerHTML = detail.dependencies
+    .map(([name, description]) => `<div class="dependency-item"><div><b>${name}</b><span>${description}</span></div><span class="tag normal">ligado</span></div>`)
+    .join("");
+
+  const diagnostics = assetDiagnostics(asset, analysis);
+  els.drawerAnalysis.innerHTML = diagnostics
+    .map((item) => `<div class="drawer-analysis-item"><b>${item.title}</b><p>${item.text}</p></div>`)
+    .join("");
+
+  drawAssetMiniChart(asset.id, analysis);
+}
+
+function assetMetricCards(assetId, analysis) {
+  const m = state.metrics;
+  const sector = state.sectors.find((item) => item.id === "school");
+  const clinic = state.sectors.find((item) => item.id === "clinic");
+  const map = {
+    "solar-a": [
+      ["Geracao atual", `${m.generation.toFixed(1)} kW`],
+      ["Demanda total", `${m.load.toFixed(1)} kW`],
+      ["Risco energia", `${Math.round(analysis.risks.energy)}%`],
+      ["Saldo instantaneo", `${(m.generation - m.load).toFixed(1)} kW`],
+    ],
+    "battery-bank": [
+      ["Carga do banco", `${Math.round(m.battery)}%`],
+      ["Autonomia", minutesToLabel(analysis.autonomyMinutes)],
+      ["Descarga liquida", `${Math.max(0, m.load - m.generation).toFixed(1)} kW`],
+      ["MTTR estimado", `${analysis.mttr} min`],
+    ],
+    "mesh-tower": [
+      ["Latencia", `${Math.round(m.latency)} ms`],
+      ["Perda de pacotes", `${m.packetLoss.toFixed(1)}%`],
+      ["Roteadores", `${m.routersOnline}/${m.routersTotal}`],
+      ["SLA estimado", `${analysis.availability.toFixed(2)}%`],
+    ],
+    "env-array": [
+      ["Temperatura", `${Math.round(m.temperature)} C`],
+      ["Fumaca", `${Math.round(m.smoke)}%`],
+      ["Qualidade do ar", `${Math.round(m.aqi)} AQI`],
+      ["Sensores online", `${m.sensorsOnline}/${m.sensorsTotal}`],
+    ],
+    "school-load": [
+      ["Carga atual", `${Math.round(sector.load * 100)}%`],
+      ["Prioridade", `P${sector.priority}`],
+      ["Reserva alocada", `${sector.batteryShare}%`],
+      ["Estado", levelLabel(sector.status)],
+    ],
+    "clinic-load": [
+      ["Carga atual", `${Math.round(clinic.load * 100)}%`],
+      ["Prioridade", `P${clinic.priority}`],
+      ["Reserva alocada", `${clinic.batteryShare}%`],
+      ["Protecao", analysis.severity === "danger" ? "ativa" : "pronta"],
+    ],
+  };
+
+  return map[assetId].map(([label, value]) => ({ label, value }));
+}
+
+function assetDiagnostics(asset, analysis) {
+  const risks = analysis.risks;
+  const cause = analysis.root.label;
+  return [
+    {
+      title: "Leitura operacional",
+      text: `${asset.name} esta em estado ${levelLabel(asset.status)} com saude ${asset.health.toFixed(0)}%. Causa raiz global: ${cause}.`,
+    },
+    {
+      title: "Risco relacionado",
+      text: relatedRiskText(asset.id, risks),
+    },
+    {
+      title: "Acao recomendada",
+      text: asset.action,
+    },
+    {
+      title: "Impacto comunitario",
+      text: impactText(asset.id, analysis),
+    },
+  ];
+}
+
+function relatedRiskText(assetId, risks) {
+  const map = {
+    "solar-a": `Risco energetico em ${Math.round(risks.energy)}%, calculado por bateria, geracao e consumo.`,
+    "battery-bank": `Continuidade em risco ${Math.round(risks.continuity)}%, com autonomia projetada a partir da descarga liquida.`,
+    "mesh-tower": `Risco de rede em ${Math.round(risks.network)}%, combinando latencia, perda e roteadores indisponiveis.`,
+    "env-array": `Risco ambiental em ${Math.round(risks.environment)}%, cruzando calor, fumaca, AQI e sensores offline.`,
+    "school-load": `Carga flexivel usada para aliviar energia quando o risco energetico passa de 38%.`,
+    "clinic-load": `Servico essencial protegido mesmo em risco de continuidade de ${Math.round(risks.continuity)}%.`,
+  };
+  return map[assetId];
+}
+
+function impactText(assetId, analysis) {
+  const map = {
+    "solar-a": "Se falhar, a comunidade passa a operar por bateria e precisa reduzir cargas flexiveis.",
+    "battery-bank": "Se ficar critica, o Modo Guardiao corta cargas nao essenciais e preserva posto, agua e comunicacao.",
+    "mesh-tower": "Se degradar, a cloud perde sincronizacao e o painel passa a depender de operacao edge local.",
+    "env-array": "Se degradar, eventos ambientais precisam ser confirmados por redundancia ou verificacao em campo.",
+    "school-load": "Pode ser reduzida sem derrubar servicos vitais, funcionando como amortecedor de carga.",
+    "clinic-load": `Tem prioridade maxima; em crise recebe protecao automatica e MTTR alvo de ${analysis.mttr} minutos.`,
+  };
+  return map[assetId];
+}
+
+function drawAssetMiniChart(assetId, analysis) {
+  const canvas = els.assetMiniChart;
+  const { ctx, width, height } = chartContext(canvas);
+  const pad = 24;
+  const data = state.history.length ? state.history : [{ battery: 83, latency: 32, risk: 10, envRisk: 8, score: 92 }];
+  const series = assetSeries(assetId, data, analysis);
+  ctx.clearRect(0, 0, width, height);
+  drawGrid(ctx, width, height, pad);
+  series.forEach((item) => drawSeries(ctx, item.values, item.min, item.max, width, height, pad, item.color));
+  drawLegend(ctx, series.map((item) => [item.label, item.color]), pad, 16);
+}
+
+function assetSeries(assetId, data, analysis) {
+  const maps = {
+    "solar-a": [
+      { label: "Geracao", values: data.map((d) => d.generation * 18), min: 0, max: 100, color: "#ce7a1a" },
+      { label: "Carga", values: data.map((d) => d.load * 18), min: 0, max: 100, color: "#285fd6" },
+    ],
+    "battery-bank": [
+      { label: "Bateria", values: data.map((d) => d.battery), min: 0, max: 100, color: "#168a5b" },
+      { label: "Risco", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
+    ],
+    "mesh-tower": [
+      { label: "Latencia", values: data.map((d) => d.latency), min: 0, max: 700, color: "#285fd6" },
+      { label: "Perda", values: data.map((d) => d.packetLoss * 10), min: 0, max: 100, color: "#7652c8" },
+    ],
+    "env-array": [
+      { label: "Risco amb.", values: data.map((d) => d.envRisk), min: 0, max: 100, color: "#168a5b" },
+      { label: "Risco geral", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
+    ],
+    "school-load": [
+      { label: "Score", values: data.map((d) => d.score), min: 0, max: 100, color: "#285fd6" },
+      { label: "Risco", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
+    ],
+    "clinic-load": [
+      { label: "SLA", values: data.map((d) => d.availability), min: 70, max: 100, color: "#168a5b" },
+      { label: "Risco", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
+    ],
+  };
+  return maps[assetId] || maps["battery-bank"];
+}
+
 function chartContext(canvas) {
   const ratio = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
@@ -863,10 +1122,13 @@ function bindEvents() {
   });
   $$(".node").forEach((node) => {
     node.addEventListener("click", () => {
-      const asset = state.assets.find((item) => item.id === node.dataset.asset);
-      pushEvent("info", asset.name, `${asset.type} em ${asset.sector}. Saude ${asset.health.toFixed(0)}%. ${asset.action}.`);
-      renderTimeline();
+      openAssetDetail(node.dataset.asset);
     });
+  });
+  els.drawerClose.addEventListener("click", closeAssetDetail);
+  $("[data-close-drawer]").addEventListener("click", closeAssetDetail);
+  window.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && els.drawer.classList.contains("open")) closeAssetDetail();
   });
   window.addEventListener("resize", () => render(analyze()));
 }

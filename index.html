@@ -222,6 +222,53 @@
       </section>
     </main>
 
+    <section class="asset-drawer" id="asset-drawer" aria-hidden="true">
+      <div class="drawer-backdrop" data-close-drawer></div>
+      <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title">
+        <header class="drawer-header">
+          <div>
+            <p class="eyebrow" id="drawer-type">Ativo comunitario</p>
+            <h2 id="drawer-title">Detalhes do ativo</h2>
+            <span id="drawer-sector">Setor central</span>
+          </div>
+          <button class="icon-button" id="drawer-close" type="button" title="Fechar detalhe" aria-label="Fechar detalhe">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" /></svg>
+          </button>
+        </header>
+
+        <div class="drawer-summary">
+          <div class="health-ring" id="drawer-health-ring">
+            <strong id="drawer-health">94%</strong>
+            <span>saude</span>
+          </div>
+          <div class="drawer-state">
+            <span class="tag normal" id="drawer-status">normal</span>
+            <p id="drawer-description">Monitoramento detalhado do componente selecionado.</p>
+          </div>
+        </div>
+
+        <div class="drawer-grid" id="drawer-metrics"></div>
+
+        <div class="detail-section">
+          <div class="detail-heading">
+            <h3>Telemetria local</h3>
+            <span id="drawer-updated">agora</span>
+          </div>
+          <canvas id="asset-mini-chart" height="150" aria-label="Grafico do ativo selecionado"></canvas>
+        </div>
+
+        <div class="detail-section">
+          <h3>Dependencias</h3>
+          <div class="dependency-list" id="drawer-dependencies"></div>
+        </div>
+
+        <div class="detail-section">
+          <h3>Diagnostico e resposta</h3>
+          <div class="drawer-analysis" id="drawer-analysis"></div>
+        </div>
+      </aside>
+    </section>
+
     <template id="event-template">
       <div class="event">
         <span class="event-level"></span>
