@@ -34,3 +34,10 @@ O app passa a comunicar melhor o estado da comunidade em poucos segundos, além 
 - [x] Manter KPIs, faixa de resiliência, topologia e Modo Guardião visíveis na primeira dobra.
 - [x] Revisar textos estáticos e dinâmicos para português brasileiro.
 - [x] Redesenhar gráficos ao abrir seções expansíveis para preservar layout responsivo.
+
+## Rodada framework de UI
+
+- [x] Adicionar o framework CSS local `Sentinel UI`, inspirado em componentes e utilitários de dashboards operacionais.
+- [x] Aplicar classes de framework em cards, botões, badges, accordions, inputs, grids e tabelas.
+- [x] Preservar execução offline, sem CDN, build ou dependências externas.
+- [x] Manter a camada visual específica do Sentinela em `styles.css` sobre os tokens do framework.

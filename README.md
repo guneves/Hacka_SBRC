@@ -13,6 +13,7 @@ Aplicação 100% via software para demonstrar um centro de operações de infrae
 - Faixa visual de resiliência por domínio e brief automático para decisão operacional.
 - Integração opcional com **Open-Meteo**, escolhida como API principal da pesquisa por ser JSON, sem chave e adequada a projetos comunitários.
 - Tela inicial enxuta com seções expansíveis para dados reais, análises, gráficos, operação e simulações.
+- Framework CSS local **Sentinel UI** para tokens, cards, botões, badges, inputs, tabelas e accordions sem depender de CDN.
 - Interface mais acessível com link de pular conteúdo, foco visível, descrições operacionais, regiões anunciadas e modal navegável por teclado.
 
 ## Diferencial
@@ -61,6 +62,7 @@ Use **Atualizar Open-Meteo** para buscar telemetria real por latitude/longitude.
 ## Arquivos
 
 - `index.html`: estrutura da aplicação.
+- `sentinel-ui.css`: framework CSS local usado pela interface.
 - `styles.css`: visual responsivo.
 - `app.js`: simulação, análises e gráficos.
 - `TASKLIST.md`: plano executável do sistema completo.
