@@ -12,17 +12,17 @@
     <main class="app-shell" id="main-content">
       <header class="topbar">
         <div class="brand">
-          <p class="eyebrow">Centro de operacoes comunitario</p>
+          <p class="eyebrow">Centro de operações comunitário</p>
           <h1>Sentinela Digital Pro</h1>
-          <p class="subtitle">Gemeo digital, telemetria, previsao, incidentes e resposta automatica.</p>
+          <p class="subtitle">Painel vivo para energia, rede, ambiente e resposta a incidentes.</p>
         </div>
         <div class="topbar-actions">
-          <span class="status-pill" id="system-status" role="status" aria-live="polite"><i></i> Operacao normal</span>
-          <span class="sync-pill" id="sync-mode">Edge + Cloud sincronizado</span>
-          <button class="icon-button" id="pause-button" type="button" title="Pausar simulacao" aria-label="Pausar simulacao">
+          <span class="status-pill" id="system-status" role="status" aria-live="polite"><i></i> Operação normal</span>
+          <span class="sync-pill" id="sync-mode">Edge + nuvem sincronizados</span>
+          <button class="icon-button" id="pause-button" type="button" title="Pausar simulação" aria-label="Pausar simulação">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14" /></svg>
           </button>
-          <button class="icon-button" id="reset-button" type="button" title="Reiniciar simulacao" aria-label="Reiniciar simulacao">
+          <button class="icon-button" id="reset-button" type="button" title="Reiniciar simulação" aria-label="Reiniciar simulação">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12a9 9 0 1 0 3-6.7M3 4v6h6" /></svg>
           </button>
         </div>
@@ -30,41 +30,41 @@
 
       <section class="kpi-grid" aria-label="Indicadores principais">
         <article class="kpi-card" aria-describedby="kpi-score-help">
-          <p>Indice operacional</p>
+          <p>Índice operacional</p>
           <strong id="kpi-score">98</strong>
           <span id="kpi-score-label">Normal</span>
-          <small id="kpi-score-help">Quanto mais perto de 100, mais segura esta a operacao.</small>
+          <small id="kpi-score-help">Quanto mais perto de 100, mais segura está a operação.</small>
         </article>
         <article class="kpi-card" aria-describedby="kpi-autonomy-help">
-          <p>Autonomia energetica</p>
+          <p>Autonomia energética</p>
           <strong id="kpi-autonomy">7h 20m</strong>
-          <span id="kpi-autonomy-label">Baterias saudaveis</span>
-          <small id="kpi-autonomy-help">Tempo estimado ate a bateria atingir nivel critico.</small>
+          <span id="kpi-autonomy-label">Baterias saudáveis</span>
+          <small id="kpi-autonomy-help">Tempo estimado até a bateria atingir nível crítico.</small>
         </article>
         <article class="kpi-card" aria-describedby="kpi-availability-help">
           <p>Disponibilidade de rede</p>
           <strong id="kpi-availability">99.4%</strong>
           <span id="kpi-availability-label">SLA dentro da meta</span>
-          <small id="kpi-availability-help">Estimativa de estabilidade da internet comunitaria.</small>
+          <small id="kpi-availability-help">Estimativa de estabilidade da internet comunitária.</small>
         </article>
         <article class="kpi-card" aria-describedby="kpi-env-help">
           <p>Risco ambiental</p>
           <strong id="kpi-env-risk">8%</strong>
           <span id="kpi-env-label">Sem anomalias</span>
-          <small id="kpi-env-help">Combina calor, fumaca, ar e sensores offline.</small>
+          <small id="kpi-env-help">Combina calor, fumaça, ar e sensores offline.</small>
         </article>
         <article class="kpi-card" aria-describedby="kpi-mttr-help">
           <p>MTTR estimado</p>
           <strong id="kpi-mttr">18 min</strong>
           <span id="kpi-mttr-label">Equipe local pronta</span>
-          <small id="kpi-mttr-help">Tempo medio previsto para recuperar o servico.</small>
+          <small id="kpi-mttr-help">Tempo médio previsto para recuperar o serviço.</small>
         </article>
       </section>
 
-      <section class="resilience-strip" aria-label="Resumo visual de resiliencia">
+      <section class="resilience-strip" aria-label="Resumo visual de resiliência">
         <article class="strip-card" id="strip-energy">
           <span>Energia</span>
-          <b id="strip-energy-label">Estavel</b>
+          <b id="strip-energy-label">Estável</b>
           <i aria-hidden="true"><em id="strip-energy-bar"></em></i>
         </article>
         <article class="strip-card" id="strip-network">
@@ -84,6 +84,11 @@
         </article>
       </section>
 
+      <details class="collapsible-panel">
+        <summary>
+          <span>Dados reais e localização</span>
+          <small>Open-Meteo opcional, com fallback automático</small>
+        </summary>
       <section class="data-source-panel" aria-label="Fonte de dados reais">
         <div>
           <p class="eyebrow">API recomendada pela pesquisa</p>
@@ -105,25 +110,26 @@
             <span></span>
             Usar dados reais
           </label>
-          <small class="control-help" id="location-help">Padrao: Salvador, BA. A API e opcional e o fallback mantem a demo ativa.</small>
+          <small class="control-help" id="location-help">Padrão: Salvador, BA. A API é opcional e o fallback mantém a demo ativa.</small>
         </div>
         <div class="source-status" id="weather-source-status" role="status" aria-live="polite">
           <span class="tag warning">fallback</span>
-          <b>Simulacao local</b>
+          <b>Simulação local</b>
           <small>Sem chamada externa neste ciclo</small>
         </div>
       </section>
+      </details>
 
       <section class="main-grid">
         <article class="panel map-panel">
           <div class="panel-head">
             <div>
-              <p class="eyebrow">Gemeo digital</p>
+              <p class="eyebrow">Gêmeo digital</p>
               <h2>Topologia viva da comunidade</h2>
             </div>
-            <span id="active-scenario">Cenario normal</span>
+            <span id="active-scenario">Cenário normal</span>
           </div>
-          <p class="panel-help">Clique em um membro da comunidade para abrir telemetria, dependencias e acoes recomendadas.</p>
+          <p class="panel-help">Clique em um membro da comunidade para abrir telemetria, dependências e ações recomendadas.</p>
           <div class="digital-twin" id="digital-twin" aria-label="Mapa operacional da comunidade">
             <svg class="topology-lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
               <path data-link="solar-storage" d="M18 24 C28 18, 35 24, 43 37" />
@@ -146,11 +152,11 @@
             <button class="node node-sensor" data-asset="env-array" type="button" aria-label="Abrir detalhes da malha de sensores ambientais">
               <b>Sensores</b><span id="node-sensor">8/8</span>
             </button>
-            <button class="node node-school" data-asset="school-load" type="button" aria-label="Abrir detalhes da escola comunitaria">
-              <b>Escola</b><span id="node-school">carga media</span>
+            <button class="node node-school" data-asset="school-load" type="button" aria-label="Abrir detalhes da escola comunitária">
+              <b>Escola</b><span id="node-school">carga média</span>
             </button>
-            <button class="node node-clinic critical" data-asset="clinic-load" type="button" aria-label="Abrir detalhes do posto de saude">
-              <b>Posto</b><span id="node-clinic">prioritario</span>
+            <button class="node node-clinic critical" data-asset="clinic-load" type="button" aria-label="Abrir detalhes do posto de saúde">
+              <b>Posto</b><span id="node-clinic">prioritário</span>
             </button>
           </div>
         </article>
@@ -158,18 +164,18 @@
         <article class="panel command-panel" id="guardian-panel">
           <div class="panel-head">
             <div>
-              <p class="eyebrow">Modo Guardiao</p>
-              <h2>Comando autonomo</h2>
+              <p class="eyebrow">Modo Guardião</p>
+              <h2>Comando autônomo</h2>
             </div>
             <span class="risk-badge" id="risk-badge">12%</span>
           </div>
           <div class="guardian-status">
-            <strong id="guardian-title">Sistema estavel</strong>
-            <p id="guardian-copy">A operacao esta dentro dos limites. O modelo preditivo segue em observacao continua.</p>
+            <strong id="guardian-title">Sistema estável</strong>
+            <p id="guardian-copy">A operação está dentro dos limites. O modelo preditivo segue em observação contínua.</p>
           </div>
           <div class="forecast-card">
-            <span>Previsao</span>
-            <b id="forecast-text">Sem risco de colapso nas proximas 3 horas.</b>
+            <span>Previsão</span>
+            <b id="forecast-text">Sem risco de colapso nas próximas 3 horas.</b>
           </div>
           <div class="runbook">
             <div class="phase" data-phase="detect"><span>1</span><b>Detectar</b><small id="phase-detect">ativo</small></div>
@@ -177,20 +183,20 @@
             <div class="phase" data-phase="protect"><span>3</span><b>Proteger</b><small id="phase-protect">aguardando</small></div>
             <div class="phase" data-phase="recover"><span>4</span><b>Recuperar</b><small id="phase-recover">aguardando</small></div>
           </div>
-          <ol class="action-plan" id="action-plan" aria-label="Plano automatico de resposta"></ol>
+          <ol class="action-plan" id="action-plan" aria-label="Plano automático de resposta"></ol>
         </article>
       </section>
 
       <section class="metrics-grid">
         <article class="metric-card" id="energy-card">
-          <div class="metric-head"><span class="metric-icon energy">PV</span><div><p>Energia</p><h3 id="energy-status">Estavel</h3></div></div>
+          <div class="metric-head"><span class="metric-icon energy">PV</span><div><p>Energia</p><h3 id="energy-status">Estável</h3></div></div>
           <div class="metric-row"><b id="battery-value">83%</b><span>Bateria</span></div>
           <div class="progress"><i id="battery-bar"></i></div>
           <div class="metric-split"><span id="generation-value">4.8 kW gerados</span><span id="load-value">2.1 kW consumidos</span></div>
         </article>
         <article class="metric-card" id="network-card">
           <div class="metric-head"><span class="metric-icon network">IP</span><div><p>Rede</p><h3 id="network-status">Online</h3></div></div>
-          <div class="metric-row"><b id="latency-value">32 ms</b><span>Latencia</span></div>
+          <div class="metric-row"><b id="latency-value">32 ms</b><span>Latência</span></div>
           <div class="progress"><i id="network-bar"></i></div>
           <div class="metric-split"><span id="packet-loss">0.2% perda</span><span id="routers-online">5/5 roteadores</span></div>
         </article>
@@ -201,77 +207,88 @@
           <div class="metric-split"><span id="air-quality">92 AQI</span><span id="sensors-online">8/8 sensores</span></div>
         </article>
         <article class="metric-card" id="ops-card">
-          <div class="metric-head"><span class="metric-icon ops">AI</span><div><p>Analise</p><h3 id="ops-status">Sem anomalia</h3></div></div>
-          <div class="metric-row"><b id="anomaly-value">0.8s</b><span>Desvio maximo</span></div>
+          <div class="metric-head"><span class="metric-icon ops">AI</span><div><p>Análise</p><h3 id="ops-status">Sem anomalia</h3></div></div>
+          <div class="metric-row"><b id="anomaly-value">0.8s</b><span>Desvio máximo</span></div>
           <div class="progress"><i id="ops-bar"></i></div>
-          <div class="metric-split"><span id="root-cause">Causa: nenhuma</span><span id="confidence">92% confianca</span></div>
+          <div class="metric-split"><span id="root-cause">Causa: nenhuma</span><span id="confidence">92% confiança</span></div>
         </article>
       </section>
 
+      <details class="collapsible-panel">
+        <summary>
+          <span>Análises e gráficos</span>
+          <small>Séries temporais, radar, SLA e capacidade</small>
+        </summary>
       <section class="analytics-grid">
         <article class="panel chart-panel wide">
           <div class="panel-head">
-            <div><p class="eyebrow">Series temporais</p><h2>Telemetria e previsao</h2></div>
+            <div><p class="eyebrow">Séries temporais</p><h2>Telemetria e previsão</h2></div>
             <span id="history-size">0 amostras</span>
           </div>
-          <p class="chart-summary" id="timeline-chart-summary">Grafico compara bateria, risco e latencia ao longo do tempo.</p>
-          <canvas id="timeline-chart" height="260" aria-label="Grafico temporal" role="img" aria-describedby="timeline-chart-summary"></canvas>
+          <p class="chart-summary" id="timeline-chart-summary">O gráfico compara bateria, risco e latência ao longo do tempo.</p>
+          <canvas id="timeline-chart" height="260" aria-label="Gráfico temporal" role="img" aria-describedby="timeline-chart-summary"></canvas>
         </article>
         <article class="panel chart-panel">
           <div class="panel-head">
             <div><p class="eyebrow">Multirrisco</p><h2>Radar operacional</h2></div>
           </div>
-          <p class="chart-summary" id="risk-radar-summary">Radar mostra risco relativo de energia, rede, ambiente, seguranca e continuidade.</p>
+          <p class="chart-summary" id="risk-radar-summary">O radar mostra risco relativo de energia, rede, ambiente, segurança e continuidade.</p>
           <canvas id="risk-radar" height="260" aria-label="Radar de risco" role="img" aria-describedby="risk-radar-summary"></canvas>
         </article>
         <article class="panel chart-panel">
           <div class="panel-head">
-            <div><p class="eyebrow">SLA</p><h2>Disponibilidade por servico</h2></div>
+            <div><p class="eyebrow">SLA</p><h2>Disponibilidade por serviço</h2></div>
           </div>
-          <p class="chart-summary" id="sla-chart-summary">Barras indicam disponibilidade estimada por servico.</p>
-          <canvas id="sla-chart" height="260" aria-label="Grafico de SLA" role="img" aria-describedby="sla-chart-summary"></canvas>
+          <p class="chart-summary" id="sla-chart-summary">As barras indicam disponibilidade estimada por serviço.</p>
+          <canvas id="sla-chart" height="260" aria-label="Gráfico de SLA" role="img" aria-describedby="sla-chart-summary"></canvas>
         </article>
         <article class="panel chart-panel">
           <div class="panel-head">
             <div><p class="eyebrow">Capacidade</p><h2>Energia por setor</h2></div>
           </div>
-          <p class="chart-summary" id="capacity-chart-summary">Grafico compara carga e reserva energetica por setor.</p>
-          <canvas id="capacity-chart" height="260" aria-label="Grafico de capacidade" role="img" aria-describedby="capacity-chart-summary"></canvas>
+          <p class="chart-summary" id="capacity-chart-summary">O gráfico compara carga e reserva energética por setor.</p>
+          <canvas id="capacity-chart" height="260" aria-label="Gráfico de capacidade" role="img" aria-describedby="capacity-chart-summary"></canvas>
         </article>
       </section>
+      </details>
 
+      <details class="collapsible-panel">
+        <summary>
+          <span>Operação e simulações</span>
+          <small>Cenários, inventário, eventos e decisão operacional</small>
+        </summary>
       <section class="ops-grid">
         <article class="panel scenario-panel">
           <div class="panel-head">
-            <div><p class="eyebrow">Laboratorio de falhas</p><h2>Cenarios controlados</h2></div>
+            <div><p class="eyebrow">Laboratório de falhas</p><h2>Cenários controlados</h2></div>
           </div>
-          <p class="panel-help">Os cenarios simulam incidentes comuns e atualizam todo o painel em tempo real.</p>
-          <div class="scenario-buttons" aria-label="Cenarios de falha simulados">
-            <button type="button" data-scenario="storm"><b>Tempestade</b><span>Nuvens, consumo alto e radio instavel</span></button>
-            <button type="button" data-scenario="network"><b>Backhaul degradado</b><span>Latencia, perda e roteadores caindo</span></button>
-            <button type="button" data-scenario="environment"><b>Alerta ambiental</b><span>Calor, fumaca e sensores intermitentes</span></button>
-            <button type="button" data-scenario="cyber"><b>Falha cibernetica</b><span>Ruido, perda de pacotes e leituras suspeitas</span></button>
-            <button type="button" data-scenario="cascade"><b>Falha em cascata</b><span>Crise simultanea com priorizacao automatica</span></button>
-            <button type="button" data-scenario="recover"><b>Recuperar</b><span>Restaura parametros normais</span></button>
+          <p class="panel-help">Os cenários simulam incidentes comuns e atualizam todo o painel em tempo real.</p>
+          <div class="scenario-buttons" aria-label="Cenários de falha simulados">
+            <button type="button" data-scenario="storm"><b>Tempestade</b><span>Nuvens, consumo alto e rádio instável</span></button>
+            <button type="button" data-scenario="network"><b>Backhaul degradado</b><span>Latência, perda e roteadores caindo</span></button>
+            <button type="button" data-scenario="environment"><b>Alerta ambiental</b><span>Calor, fumaça e sensores intermitentes</span></button>
+            <button type="button" data-scenario="cyber"><b>Falha cibernética</b><span>Ruído, perda de pacotes e leituras suspeitas</span></button>
+            <button type="button" data-scenario="cascade"><b>Falha em cascata</b><span>Crise simultânea com priorização automática</span></button>
+            <button type="button" data-scenario="recover"><b>Recuperar</b><span>Restaura parâmetros normais</span></button>
           </div>
         </article>
 
         <article class="panel analysis-panel">
           <div class="panel-head">
-            <div><p class="eyebrow">Analise rebuscada</p><h2>Diagnostico e manutencao</h2></div>
+            <div><p class="eyebrow">Análise aprofundada</p><h2>Diagnóstico e manutenção</h2></div>
           </div>
           <div class="analysis-list" id="analysis-list" aria-live="polite"></div>
         </article>
 
         <article class="panel inventory-panel wide">
           <div class="panel-head">
-            <div><p class="eyebrow">Inventario</p><h2>Ativos, saude e prioridade</h2></div>
+            <div><p class="eyebrow">Inventário</p><h2>Ativos, saúde e prioridade</h2></div>
             <span id="asset-count">6 ativos</span>
           </div>
           <div class="table-wrap">
             <table>
               <thead>
-                <tr><th>Ativo</th><th>Tipo</th><th>Setor</th><th>Saude</th><th>Status</th><th>Proxima acao</th></tr>
+                <tr><th>Ativo</th><th>Tipo</th><th>Setor</th><th>Saúde</th><th>Status</th><th>Próxima ação</th></tr>
               </thead>
               <tbody id="asset-table"></tbody>
             </table>
@@ -288,13 +305,14 @@
 
         <article class="panel decision-panel">
           <div class="panel-head">
-            <div><p class="eyebrow">Decisao operacional</p><h2>Brief automatico</h2></div>
-            <button class="copy-button" id="copy-report" type="button">Copiar relatorio</button>
+            <div><p class="eyebrow">Decisão operacional</p><h2>Resumo automático</h2></div>
+            <button class="copy-button" id="copy-report" type="button">Copiar relatório</button>
           </div>
           <div class="decision-brief" id="decision-brief" aria-live="polite"></div>
-          <span class="report-toast" id="report-toast" role="status">Relatorio copiado</span>
+          <span class="report-toast" id="report-toast" role="status">Relatório copiado</span>
         </article>
       </section>
+      </details>
     </main>
 
     <section class="asset-drawer" id="asset-drawer" aria-hidden="true">
@@ -302,7 +320,7 @@
       <aside class="drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" aria-describedby="drawer-description" tabindex="-1">
         <header class="drawer-header">
           <div>
-            <p class="eyebrow" id="drawer-type">Ativo comunitario</p>
+            <p class="eyebrow" id="drawer-type">Ativo comunitário</p>
             <h2 id="drawer-title">Detalhes do ativo</h2>
             <span id="drawer-sector">Setor central</span>
           </div>
@@ -314,7 +332,7 @@
         <div class="drawer-summary">
           <div class="health-ring" id="drawer-health-ring">
             <strong id="drawer-health">94%</strong>
-            <span>saude</span>
+            <span>saúde</span>
           </div>
           <div class="drawer-state">
             <span class="tag normal" id="drawer-status">normal</span>
@@ -329,7 +347,7 @@
             <h3>Telemetria local</h3>
             <span id="drawer-updated">agora</span>
           </div>
-          <canvas id="asset-mini-chart" height="150" aria-label="Grafico do ativo selecionado"></canvas>
+          <canvas id="asset-mini-chart" height="150" aria-label="Gráfico do ativo selecionado"></canvas>
         </div>
 
         <div class="detail-section">
@@ -338,7 +356,7 @@
         </div>
 
         <div class="detail-section">
-          <h3>Diagnostico e resposta</h3>
+          <h3>Diagnóstico e resposta</h3>
           <div class="drawer-analysis" id="drawer-analysis"></div>
         </div>
       </aside>

@@ -283,7 +283,68 @@ h3 {
   background: rgba(255, 255, 255, 0.9);
   box-shadow: var(--shadow);
   padding: 16px;
+  margin: 0;
+}
+
+.collapsible-panel {
+  border: 1px solid rgba(219, 228, 221, 0.94);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: var(--shadow);
   margin-bottom: 16px;
+}
+
+.collapsible-panel > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 15px 16px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.collapsible-panel > summary::-webkit-details-marker {
+  display: none;
+}
+
+.collapsible-panel > summary::after {
+  content: "+";
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--surface-2);
+  color: var(--ink);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.collapsible-panel[open] > summary::after {
+  content: "-";
+}
+
+.collapsible-panel > summary span {
+  font-weight: 900;
+}
+
+.collapsible-panel > summary small {
+  color: var(--muted);
+  font-weight: 720;
+}
+
+.collapsible-panel > section {
+  border: 0;
+  box-shadow: none;
+  border-top: 1px solid var(--line);
+  border-radius: 0 0 8px 8px;
+}
+
+.collapsible-panel > .analytics-grid,
+.collapsible-panel > .ops-grid {
+  padding: 16px;
 }
 
 .data-source-panel h2 {

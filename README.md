@@ -1,28 +1,29 @@
 # Sentinela Digital Pro
 
-Aplicacao 100% via software para demonstrar um centro de operacoes de infraestrutura critica comunitaria.
+Aplicação 100% via software para demonstrar um centro de operações de infraestrutura crítica comunitária.
 
 ## O que ela simula
 
 - Energia solar, baterias e cargas por setor.
-- Internet comunitaria com roteadores mesh, latencia, perda de pacotes e disponibilidade.
-- Sensores ambientais com temperatura, fumaca, qualidade do ar e disponibilidade da malha.
-- Inventario de ativos com saude, prioridade e proxima acao.
-- Incidentes com severidade, causa raiz provavel, MTTR e plano de resposta.
-- Visualizacao detalhada de cada parte da topologia viva ao clicar nos nos do mapa.
-- Faixa visual de resiliencia por dominio e brief automatico para decisao operacional.
-- Integracao opcional com **Open-Meteo**, escolhida como API principal da pesquisa por ser JSON, sem chave e adequada a projetos comunitarios.
-- Interface mais acessivel com link de pular conteudo, foco visivel, descricoes operacionais, regioes anunciadas e modal navegavel por teclado.
+- Internet comunitária com roteadores mesh, latência, perda de pacotes e disponibilidade.
+- Sensores ambientais com temperatura, fumaça, qualidade do ar e disponibilidade da malha.
+- Inventário de ativos com saúde, prioridade e próxima ação.
+- Incidentes com severidade, causa raiz provável, MTTR e plano de resposta.
+- Visualização detalhada de cada parte da topologia viva ao clicar nos nós do mapa.
+- Faixa visual de resiliência por domínio e brief automático para decisão operacional.
+- Integração opcional com **Open-Meteo**, escolhida como API principal da pesquisa por ser JSON, sem chave e adequada a projetos comunitários.
+- Tela inicial enxuta com seções expansíveis para dados reais, análises, gráficos, operação e simulações.
+- Interface mais acessível com link de pular conteúdo, foco visível, descrições operacionais, regiões anunciadas e modal navegável por teclado.
 
 ## Diferencial
 
-O **Modo Guardiao** funciona como um gemeo digital operacional:
+O **Modo Guardião** funciona como um gêmeo digital operacional:
 
-- calcula risco por dominio;
-- preve autonomia e possibilidade de colapso;
+- calcula risco por domínio;
+- prevê autonomia e possibilidade de colapso;
 - estima SLA e MTTR;
-- identifica causa raiz provavel;
-- recomenda acoes de isolamento, protecao e recuperacao.
+- identifica causa raiz provável;
+- recomenda ações de isolamento, proteção e recuperação.
 
 ## Como executar
 
@@ -40,27 +41,27 @@ http://127.0.0.1:8765/index.html
 
 ## Como apresentar
 
-Use os botoes de **Cenarios controlados**:
+Use os botões de **Cenários controlados**:
 
-- **Tempestade**: queda de geracao solar, consumo alto e radio instavel.
-- **Backhaul degradado**: latencia, perda e roteadores caindo.
-- **Alerta ambiental**: calor, fumaca e sensores intermitentes.
-- **Falha cibernetica**: ruido de rede e leituras suspeitas.
-- **Falha em cascata**: crise simultanea com priorizacao automatica.
-- **Recuperar**: restaura a operacao normal.
+- **Tempestade**: queda de geração solar, consumo alto e rádio instável.
+- **Backhaul degradado**: latência, perda e roteadores caindo.
+- **Alerta ambiental**: calor, fumaça e sensores intermitentes.
+- **Falha cibernética**: ruído de rede e leituras suspeitas.
+- **Falha em cascata**: crise simultânea com priorização automática.
+- **Recuperar**: restaura a operação normal.
 
-Clique nos membros da **Topologia viva da comunidade** para abrir a visao detalhada do ativo, com telemetria local, dependencias, diagnostico, impacto comunitario e mini grafico.
+Clique nos membros da **Topologia viva da comunidade** para abrir a visão detalhada do ativo, com telemetria local, dependências, diagnóstico, impacto comunitário e mini gráfico.
 
-Use **Copiar relatorio** no painel de decisao operacional para gerar um resumo rapido do estado da infraestrutura.
+Use **Copiar relatório** no painel de decisão operacional para gerar um resumo rápido do estado da infraestrutura.
 
-Use `Tab` para navegar pelos controles, `Esc` para fechar a visao detalhada de um ativo e o link inicial para pular direto ao painel principal.
+Use `Tab` para navegar pelos controles, `Esc` para fechar a visão detalhada de um ativo e o link inicial para pular direto ao painel principal.
 
-Use **Atualizar Open-Meteo** para buscar telemetria real por latitude/longitude. Se a API falhar ou a internet estiver indisponivel, o app continua no fallback simulado.
+Use **Atualizar Open-Meteo** para buscar telemetria real por latitude/longitude. Se a API falhar ou a internet estiver indisponível, o app continua no fallback simulado.
 
 ## Arquivos
 
-- `index.html`: estrutura da aplicacao.
+- `index.html`: estrutura da aplicação.
 - `styles.css`: visual responsivo.
-- `app.js`: simulacao, analises e graficos.
-- `TASKLIST.md`: plano executavel do sistema completo.
+- `app.js`: simulação, análises e gráficos.
+- `TASKLIST.md`: plano executável do sistema completo.
 - `MELHORIAS.md`: melhorias priorizadas e executadas.

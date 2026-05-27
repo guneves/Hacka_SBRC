@@ -35,15 +35,15 @@ const baseline = {
     { id: "school", name: "Escola", priority: 2, load: 0.38, batteryShare: 16, status: "normal" },
     { id: "homes-north", name: "Norte", priority: 3, load: 0.52, batteryShare: 18, status: "normal" },
     { id: "homes-south", name: "Sul", priority: 3, load: 0.46, batteryShare: 14, status: "normal" },
-    { id: "water", name: "Agua", priority: 1, load: 0.32, batteryShare: 13, status: "normal" },
+    { id: "water", name: "Água", priority: 1, load: 0.32, batteryShare: 13, status: "normal" },
   ],
   assets: [
-    { id: "solar-a", name: "Campo solar A", type: "Fotovoltaico", sector: "Norte", criticality: "alta", health: 94, status: "normal", action: "Inspecao em 18 dias" },
-    { id: "battery-bank", name: "Banco de baterias", type: "Armazenamento", sector: "Central", criticality: "critica", health: 89, status: "normal", action: "Balanceamento em 9 dias" },
-    { id: "mesh-tower", name: "Torre mesh", type: "Rede", sector: "Morro", criticality: "critica", health: 91, status: "normal", action: "Verificar alinhamento em 14 dias" },
-    { id: "env-array", name: "Malha ambiental", type: "Sensores", sector: "Sul", criticality: "alta", health: 93, status: "normal", action: "Calibracao em 21 dias" },
-    { id: "school-load", name: "Quadro escola", type: "Carga", sector: "Escola", criticality: "media", health: 87, status: "normal", action: "Auditoria de consumo em 12 dias" },
-    { id: "clinic-load", name: "Carga posto", type: "Carga critica", sector: "Posto", criticality: "critica", health: 96, status: "normal", action: "Manter prioridade maxima" },
+    { id: "solar-a", name: "Campo solar A", type: "Fotovoltaico", sector: "Norte", criticality: "alta", health: 94, status: "normal", action: "Inspeção em 18 dias" },
+    { id: "battery-bank", name: "Banco de baterias", type: "Armazenamento", sector: "Central", criticality: "crítica", health: 89, status: "normal", action: "Balanceamento em 9 dias" },
+    { id: "mesh-tower", name: "Torre mesh", type: "Rede", sector: "Morro", criticality: "crítica", health: 91, status: "normal", action: "Verificar alinhamento em 14 dias" },
+    { id: "env-array", name: "Malha ambiental", type: "Sensores", sector: "Sul", criticality: "alta", health: 93, status: "normal", action: "Calibração em 21 dias" },
+    { id: "school-load", name: "Quadro escola", type: "Carga", sector: "Escola", criticality: "média", health: 87, status: "normal", action: "Auditoria de consumo em 12 dias" },
+    { id: "clinic-load", name: "Carga posto", type: "Carga crítica", sector: "Posto", criticality: "crítica", health: 96, status: "normal", action: "Manter prioridade máxima" },
   ],
   events: [],
   history: [],
@@ -156,61 +156,61 @@ const els = {
 };
 
 const scenarioLabels = {
-  normal: "Cenario normal",
+  normal: "Cenário normal",
   storm: "Tempestade severa",
   network: "Backhaul degradado",
   environment: "Alerta ambiental",
-  cyber: "Falha cibernetica",
+  cyber: "Falha cibernética",
   cascade: "Falha em cascata",
 };
 
 const assetDetails = {
   "solar-a": {
-    description: "Campo fotovoltaico responsavel pela maior parte da geracao diurna da comunidade.",
+    description: "Campo fotovoltaico responsável pela maior parte da geração diurna da comunidade.",
     dependencies: [
-      ["Banco de baterias", "recebe excedente e sustenta operacao noturna"],
-      ["Quadro escola", "carga flexivel que pode ser reduzida em crise"],
-      ["Carga posto", "mantem prioridade energetica em emergencias"],
+      ["Banco de baterias", "recebe excedente e sustenta a operação noturna"],
+      ["Quadro escola", "carga flexível que pode ser reduzida em crise"],
+      ["Carga posto", "mantém prioridade energética em emergências"],
     ],
   },
   "battery-bank": {
-    description: "Reserva energetica central que protege servicos essenciais durante baixa geracao.",
+    description: "Reserva energética central que protege serviços essenciais durante baixa geração.",
     dependencies: [
       ["Campo solar A", "fonte principal de recarga"],
-      ["Torre mesh", "mantem comunicacao quando a rede externa falha"],
-      ["Carga posto", "consumidor critico sempre priorizado"],
+      ["Torre mesh", "mantém comunicação quando a rede externa falha"],
+      ["Carga posto", "consumidor crítico sempre priorizado"],
     ],
   },
   "mesh-tower": {
-    description: "No de comunicacao principal da internet comunitaria e da sincronizacao com a nuvem.",
+    description: "Nó de comunicação principal da internet comunitária e da sincronização com a nuvem.",
     dependencies: [
-      ["Banco de baterias", "energia de backup para manter radio e roteador"],
+      ["Banco de baterias", "energia de backup para manter rádio e roteador"],
       ["Malha ambiental", "transporta telemetria dos sensores"],
-      ["Carga posto", "garante canal prioritario para atendimento local"],
+      ["Carga posto", "garante canal prioritário para atendimento local"],
     ],
   },
   "env-array": {
-    description: "Rede de sensores ambientais para calor, fumaca, umidade e qualidade do ar.",
+    description: "Rede de sensores ambientais para calor, fumaça, umidade e qualidade do ar.",
     dependencies: [
-      ["Torre mesh", "envia alertas para o painel e cloud"],
-      ["Carga posto", "orienta resposta sanitaria em eventos de risco"],
-      ["Banco de baterias", "mantem leitura durante interrupcao energetica"],
+      ["Torre mesh", "envia alertas para o painel e a nuvem"],
+      ["Carga posto", "orienta resposta sanitária em eventos de risco"],
+      ["Banco de baterias", "mantém leitura durante interrupção energética"],
     ],
   },
   "school-load": {
-    description: "Carga comunitaria flexivel: pode reduzir consumo para preservar sistemas criticos.",
+    description: "Carga comunitária flexível: pode reduzir consumo para preservar sistemas críticos.",
     dependencies: [
       ["Banco de baterias", "recebe limite de consumo conforme autonomia"],
-      ["Campo solar A", "usa excedente em operacao normal"],
-      ["Torre mesh", "mantem conectividade educacional comunitaria"],
+      ["Campo solar A", "usa excedente em operação normal"],
+      ["Torre mesh", "mantém conectividade educacional comunitária"],
     ],
   },
   "clinic-load": {
-    description: "Ponto critico da comunidade, protegido pelo Modo Guardiao em qualquer crise.",
+    description: "Ponto crítico da comunidade, protegido pelo Modo Guardião em qualquer crise.",
     dependencies: [
-      ["Banco de baterias", "reserva prioritaria de emergencia"],
-      ["Torre mesh", "canal de comunicacao essencial"],
-      ["Malha ambiental", "alertas de risco fisico para triagem local"],
+      ["Banco de baterias", "reserva prioritária de emergência"],
+      ["Torre mesh", "canal de comunicação essencial"],
+      ["Malha ambiental", "alertas de risco físico para triagem local"],
     ],
   },
 };
@@ -262,17 +262,17 @@ function setScenario(name) {
     state.assets = structuredClone(baseline.assets);
     state.sectors = structuredClone(baseline.sectors);
     state.scenario = "normal";
-    pushEvent("info", "Recuperacao concluida", "Parametros restaurados e sincronizacao cloud reativada.");
+    pushEvent("info", "Recuperação concluída", "Parâmetros restaurados e sincronização com a nuvem reativada.");
     simulateTick(true);
     return;
   }
 
   state.scenario = name;
   const messages = {
-    storm: ["warning", "Tempestade severa", "Geracao solar caiu, consumo subiu e radioenlaces perderam margem."],
-    network: ["danger", "Backhaul degradado", "A rede comunitaria apresenta latencia alta, perda e roteadores instaveis."],
-    environment: ["danger", "Alerta ambiental", "Sensores indicam aumento de temperatura, fumaca e qualidade do ar ruim."],
-    cyber: ["warning", "Falha cibernetica simulada", "Ruido de rede e leituras suspeitas exigem isolamento logico."],
+    storm: ["warning", "Tempestade severa", "Geração solar caiu, consumo subiu e rádio-enlaces perderam margem."],
+    network: ["danger", "Backhaul degradado", "A rede comunitária apresenta latência alta, perda e roteadores instáveis."],
+    environment: ["danger", "Alerta ambiental", "Sensores indicam aumento de temperatura, fumaça e qualidade do ar ruim."],
+    cyber: ["warning", "Falha cibernética simulada", "Ruído de rede e leituras suspeitas exigem isolamento lógico."],
     cascade: ["danger", "Falha em cascata", "Energia, rede e ambiente degradaram ao mesmo tempo."],
   };
   pushEvent(...messages[name]);
@@ -284,12 +284,12 @@ async function fetchOpenMeteoTelemetry() {
   const longitude = Number(els.longitudeInput.value);
 
   if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) {
-    setWeatherStatus("fallback", "Coordenadas invalidas", "Informe latitude e longitude validas.");
+    setWeatherStatus("fallback", "Coordenadas inválidas", "Informe latitude e longitude válidas.");
     return;
   }
 
   state.liveWeather.loading = true;
-  setWeatherStatus("loading", "Consultando Open-Meteo", "Buscando meteorologia e radiacao solar.");
+  setWeatherStatus("loading", "Consultando Open-Meteo", "Buscando meteorologia e radiação solar.");
 
   const params = new URLSearchParams({
     latitude: latitude.toFixed(4),
@@ -322,8 +322,8 @@ async function fetchOpenMeteoTelemetry() {
     state.liveWeather.loading = false;
     state.liveWeather.enabled = false;
     els.liveWeatherToggle.checked = false;
-    setWeatherStatus("fallback", "Fallback simulado", `Open-Meteo indisponivel: ${error.message}.`);
-    pushEvent("warning", "Falha Open-Meteo", "Nao foi possivel atualizar a API. Simulacao local mantida.");
+    setWeatherStatus("fallback", "Fallback simulado", `Open-Meteo indisponível: ${error.message}.`);
+    pushEvent("warning", "Falha Open-Meteo", "Não foi possível atualizar a API. Simulação local mantida.");
     render(analyze());
   }
 }
@@ -530,12 +530,12 @@ function nextAction(assetId, status) {
     return base.action;
   }
   const actions = {
-    "solar-a": status === "danger" ? "Despachar limpeza e bypass de string" : "Checar irradiancia e conectores",
-    "battery-bank": status === "danger" ? "Ativar racionamento e proteger cargas criticas" : "Reduzir cargas nao essenciais",
-    "mesh-tower": status === "danger" ? "Comutar para rota local e reiniciar radio" : "Recalcular rota mesh",
+    "solar-a": status === "danger" ? "Despachar limpeza e bypass de string" : "Checar irradiância e conectores",
+    "battery-bank": status === "danger" ? "Ativar racionamento e proteger cargas críticas" : "Reduzir cargas não essenciais",
+    "mesh-tower": status === "danger" ? "Comutar para rota local e reiniciar rádio" : "Recalcular rota mesh",
     "env-array": status === "danger" ? "Confirmar evento em campo e alertar defesa civil" : "Recalibrar sensores divergentes",
-    "school-load": status === "danger" ? "Cortar cargas nao essenciais" : "Agendar economia de energia",
-    "clinic-load": status === "danger" ? "Garantir UPS e radio prioritario" : "Manter prioridade de fornecimento",
+    "school-load": status === "danger" ? "Cortar cargas não essenciais" : "Agendar economia de energia",
+    "clinic-load": status === "danger" ? "Garantir UPS e rádio prioritário" : "Manter prioridade de fornecimento",
   };
   return actions[assetId];
 }
@@ -582,7 +582,7 @@ function rootCause(risks, anomaly) {
     ["Energia", risks.energy],
     ["Rede", risks.network],
     ["Ambiente", risks.environment],
-    ["Seguranca", risks.cyber],
+    ["Segurança", risks.cyber],
   ].sort((a, b) => b[1] - a[1]);
 
   const label = candidates[0][1] < 20 ? "nenhuma" : candidates[0][0];
@@ -609,15 +609,15 @@ function recordHistory(analysis) {
 
 function detectEvents(analysis) {
   if (analysis.severity === "danger") {
-    pushEvent("danger", "Modo Guardiao ativado", "Risco operacional alto exige isolamento, priorizacao e recuperacao guiada.");
+    pushEvent("danger", "Modo Guardião ativado", "Risco operacional alto exige isolamento, priorização e recuperação guiada.");
   } else if (analysis.severity === "warning") {
-    pushEvent("warning", "Degradacao preventiva", "O modelo detectou tendencia fora do padrao e abriu acompanhamento.");
+    pushEvent("warning", "Degradação preventiva", "O modelo detectou tendência fora do padrão e abriu acompanhamento.");
   }
 
-  if (analysis.risks.energy > 70) pushEvent("danger", "Energia em risco", "Autonomia baixa ou consumo maior que geracao por tempo prolongado.");
+  if (analysis.risks.energy > 70) pushEvent("danger", "Energia em risco", "Autonomia baixa ou consumo maior que geração por tempo prolongado.");
   if (analysis.risks.network > 70) pushEvent("danger", "Rede em risco", "Backhaul ou malha mesh sem estabilidade suficiente.");
-  if (analysis.risks.environment > 70) pushEvent("danger", "Evento ambiental", "Sensores apontam risco fisico que afeta operacao comunitaria.");
-  if (analysis.risks.cyber > 65) pushEvent("warning", "Anomalia logica", "Padrao de ruido sugere leitura falsa, ataque simples ou falha de firmware.");
+  if (analysis.risks.environment > 70) pushEvent("danger", "Evento ambiental", "Sensores apontam risco físico que afeta operação comunitária.");
+  if (analysis.risks.cyber > 65) pushEvent("warning", "Anomalia lógica", "Padrão de ruído sugere leitura falsa, ataque simples ou falha de firmware.");
 }
 
 function levelFromSeverity(severity) {
@@ -642,13 +642,13 @@ function render(analysis = analyze()) {
   const m = state.metrics;
   const risks = analysis.risks;
   const severity = analysis.severity;
-  const statusText = severity === "danger" ? "Modo crise ativo" : severity === "warning" ? "Atencao preventiva" : "Operacao normal";
+  const statusText = severity === "danger" ? "Modo crise ativo" : severity === "warning" ? "Atenção preventiva" : "Operação normal";
 
   els.status.lastChild.textContent = ` ${statusText}`;
   els.status.querySelector("i").style.background = severity === "danger" ? "var(--red)" : severity === "warning" ? "var(--amber)" : "var(--green)";
-  els.syncMode.textContent = m.routersOnline < 3 ? "Edge local ativo, cloud degradada" : "Edge + Cloud sincronizado";
+  els.syncMode.textContent = m.routersOnline < 3 ? "Edge local ativo, nuvem degradada" : "Edge + nuvem sincronizados";
   els.activeScenario.textContent = scenarioLabels[state.scenario];
-  announceState(`${statusText}. Score ${analysis.operationalScore}. Causa raiz ${analysis.root.label}.`);
+  announceState(`${statusText}. Pontuação ${analysis.operationalScore}. Causa raiz ${analysis.root.label}.`);
 
   renderWeatherSource();
   renderKpis(analysis);
@@ -666,23 +666,23 @@ function render(analysis = analyze()) {
 
 function renderKpis(analysis) {
   els.kpiScore.textContent = analysis.operationalScore;
-  els.kpiScoreLabel.textContent = analysis.severity === "danger" ? "Crise operacional" : analysis.severity === "warning" ? "Degradacao" : "Normal";
+  els.kpiScoreLabel.textContent = analysis.severity === "danger" ? "Crise operacional" : analysis.severity === "warning" ? "Degradação" : "Normal";
   els.kpiAutonomy.textContent = minutesToLabel(analysis.autonomyMinutes);
-  els.kpiAutonomyLabel.textContent = analysis.autonomyMinutes < 60 ? "Autonomia critica" : analysis.autonomyMinutes < 180 ? "Economia recomendada" : "Baterias saudaveis";
+  els.kpiAutonomyLabel.textContent = analysis.autonomyMinutes < 60 ? "Autonomia crítica" : analysis.autonomyMinutes < 180 ? "Economia recomendada" : "Baterias saudáveis";
   els.kpiAvailability.textContent = `${analysis.availability.toFixed(2)}%`;
   els.kpiAvailabilityLabel.textContent = analysis.availability < 95 ? "SLA rompido" : analysis.availability < 98.5 ? "SLA em risco" : "SLA dentro da meta";
   els.kpiEnvRisk.textContent = `${Math.round(analysis.risks.environment)}%`;
-  els.kpiEnvLabel.textContent = analysis.risks.environment >= 70 ? "Risco fisico alto" : analysis.risks.environment >= 38 ? "Anomalia ambiental" : "Sem anomalias";
+  els.kpiEnvLabel.textContent = analysis.risks.environment >= 70 ? "Risco físico alto" : analysis.risks.environment >= 38 ? "Anomalia ambiental" : "Sem anomalias";
   els.kpiMttr.textContent = `${analysis.mttr} min`;
   els.kpiMttrLabel.textContent = analysis.mttr > 60 ? "Requer equipe externa" : "Equipe local pronta";
 }
 
 function renderResilienceStrip(analysis) {
   const items = [
-    [els.stripEnergy, els.stripEnergyLabel, els.stripEnergyBar, analysis.risks.energy, "Energia protegida", "Energia em atencao", "Energia critica"],
-    [els.stripNetwork, els.stripNetworkLabel, els.stripNetworkBar, analysis.risks.network, "Rede saudavel", "Rede instavel", "Rede critica"],
-    [els.stripEnvironment, els.stripEnvironmentLabel, els.stripEnvironmentBar, analysis.risks.environment, "Ambiente normal", "Ambiente anormal", "Ambiente critico"],
-    [els.stripContinuity, els.stripContinuityLabel, els.stripContinuityBar, analysis.risks.continuity, "Continuidade protegida", "Continuidade em risco", "Continuidade critica"],
+    [els.stripEnergy, els.stripEnergyLabel, els.stripEnergyBar, analysis.risks.energy, "Energia protegida", "Energia em atenção", "Energia crítica"],
+    [els.stripNetwork, els.stripNetworkLabel, els.stripNetworkBar, analysis.risks.network, "Rede saudável", "Rede instável", "Rede crítica"],
+    [els.stripEnvironment, els.stripEnvironmentLabel, els.stripEnvironmentBar, analysis.risks.environment, "Ambiente normal", "Ambiente anormal", "Ambiente crítico"],
+    [els.stripContinuity, els.stripContinuityLabel, els.stripContinuityBar, analysis.risks.continuity, "Continuidade protegida", "Continuidade em risco", "Continuidade crítica"],
   ];
 
   items.forEach(([card, label, bar, risk, normalText, warningText, dangerText]) => {
@@ -711,7 +711,7 @@ function renderWeatherSource() {
   const source = state.liveWeather;
   const current = source.current;
   const mode = source.enabled && current ? "live" : source.status;
-  const label = mode === "live" ? "Open-Meteo live" : mode === "loading" ? "carregando" : "fallback";
+  const label = mode === "live" ? "Open-Meteo ao vivo" : mode === "loading" ? "carregando" : "fallback";
   const tagLevel = mode === "live" ? "normal" : mode === "loading" ? "warning" : "warning";
   const lastFetch = source.lastFetch
     ? new Intl.DateTimeFormat("pt-BR", { hour: "2-digit", minute: "2-digit" }).format(source.lastFetch)
@@ -724,11 +724,11 @@ function renderWeatherSource() {
   els.loadWeather.setAttribute("aria-busy", String(source.loading));
   els.weatherSourceCopy.textContent =
     mode === "live"
-      ? `Usando temperatura, vento, chuva, nuvens e radiacao solar reais para ajustar geracao PV e risco ambiental.`
+      ? `Usando temperatura, vento, chuva, nuvens e radiação solar reais para ajustar geração PV e risco ambiental.`
       : "Telemetria em modo simulado com fallback local ativo.";
   els.weatherSourceStatus.innerHTML =
     `<span class="tag ${tagLevel}">${label}</span>` +
-    `<b>${mode === "live" ? `${current.temperature.toFixed(1)} C · ${current.shortwave.toFixed(0)} W/m2` : source.status === "loading" ? "Consultando API" : "Simulacao local"}</b>` +
+    `<b>${mode === "live" ? `${current.temperature.toFixed(1)} C · ${current.shortwave.toFixed(0)} W/m2` : source.status === "loading" ? "Consultando API" : "Simulação local"}</b>` +
     `<small>${mode === "live" ? `Atualizado ${lastFetch}; nuvens ${current.cloudCover.toFixed(0)}%, vento ${current.windKmh.toFixed(1)} km/h.` : source.message}</small>`;
 }
 
@@ -747,14 +747,14 @@ function renderDomainCards(analysis) {
   els.batteryValue.textContent = `${Math.round(m.battery)}%`;
   els.generationValue.textContent = `${m.generation.toFixed(1)} kW gerados`;
   els.loadValue.textContent = `${m.load.toFixed(1)} kW consumidos`;
-  els.energyStatus.textContent = energyLevel === "danger" ? "Critica" : energyLevel === "warning" ? "Em atencao" : "Estavel";
+  els.energyStatus.textContent = energyLevel === "danger" ? "Crítica" : energyLevel === "warning" ? "Em atenção" : "Estável";
   setProgress(els.batteryBar, m.battery, energyLevel);
 
   const networkHealth = clamp(100 - analysis.risks.network, 4, 100);
   els.latencyValue.textContent = `${Math.round(m.latency)} ms`;
   els.packetLoss.textContent = `${m.packetLoss.toFixed(1)}% perda`;
   els.routersOnline.textContent = `${m.routersOnline}/${m.routersTotal} roteadores`;
-  els.networkStatus.textContent = networkLevel === "danger" ? "Degradada" : networkLevel === "warning" ? "Instavel" : "Online";
+  els.networkStatus.textContent = networkLevel === "danger" ? "Degradada" : networkLevel === "warning" ? "Instável" : "Online";
   setProgress(els.networkBar, networkHealth, networkLevel);
 
   const envHealth = clamp(100 - analysis.risks.environment, 3, 100);
@@ -767,7 +767,7 @@ function renderDomainCards(analysis) {
   els.opsStatus.textContent = opsLevel === "danger" ? "Causa raiz ativa" : opsLevel === "warning" ? "Investigando" : "Sem anomalia";
   els.anomalyValue.textContent = `${analysis.anomaly.toFixed(1)}s`;
   els.rootCause.textContent = `Causa: ${analysis.root.label}`;
-  els.confidence.textContent = `${analysis.root.confidence}% confianca`;
+  els.confidence.textContent = `${analysis.root.confidence}% confiança`;
   setProgress(els.opsBar, clamp(100 - analysis.risks.continuity, 3, 100), opsLevel);
 }
 
@@ -792,14 +792,14 @@ function renderTwin(analysis) {
   els.nodeStorage.textContent = `${Math.round(m.battery)}%`;
   els.nodeTower.textContent = `${Math.round(m.latency)} ms`;
   els.nodeSensor.textContent = `${m.sensorsOnline}/${m.sensorsTotal}`;
-  els.nodeSchool.textContent = state.sectors.find((s) => s.id === "school").status === "danger" ? "corte parcial" : "carga media";
-  els.nodeClinic.textContent = analysis.severity === "danger" ? "protegido" : "prioritario";
-  setNodeLabel("solar-a", `Abrir detalhes do Campo solar A. Geracao ${m.generation.toFixed(1)} quilowatts. Risco energetico ${Math.round(analysis.risks.energy)} por cento.`);
+  els.nodeSchool.textContent = state.sectors.find((s) => s.id === "school").status === "danger" ? "corte parcial" : "carga média";
+  els.nodeClinic.textContent = analysis.severity === "danger" ? "protegido" : "prioritário";
+  setNodeLabel("solar-a", `Abrir detalhes do Campo solar A. Geração ${m.generation.toFixed(1)} quilowatts. Risco energético ${Math.round(analysis.risks.energy)} por cento.`);
   setNodeLabel("battery-bank", `Abrir detalhes do banco de baterias. Carga ${Math.round(m.battery)} por cento. Autonomia ${minutesToLabel(analysis.autonomyMinutes)}.`);
-  setNodeLabel("mesh-tower", `Abrir detalhes da torre mesh. Latencia ${Math.round(m.latency)} milissegundos. ${m.routersOnline} de ${m.routersTotal} roteadores online.`);
+  setNodeLabel("mesh-tower", `Abrir detalhes da torre mesh. Latência ${Math.round(m.latency)} milissegundos. ${m.routersOnline} de ${m.routersTotal} roteadores online.`);
   setNodeLabel("env-array", `Abrir detalhes dos sensores ambientais. Temperatura ${Math.round(m.temperature)} graus. ${m.sensorsOnline} de ${m.sensorsTotal} sensores online.`);
-  setNodeLabel("school-load", `Abrir detalhes da escola comunitaria. Estado ${levelLabel(state.sectors.find((s) => s.id === "school").status)}.`);
-  setNodeLabel("clinic-load", `Abrir detalhes do posto de saude. Estado ${analysis.severity === "danger" ? "protegido em crise" : "prioritario"}.`);
+  setNodeLabel("school-load", `Abrir detalhes da escola comunitária. Estado ${levelLabel(state.sectors.find((s) => s.id === "school").status)}.`);
+  setNodeLabel("clinic-load", `Abrir detalhes do posto de saúde. Estado ${analysis.severity === "danger" ? "protegido em crise" : "prioritário"}.`);
 
   $$("[data-link]").forEach((link) => {
     link.classList.remove("warning", "danger");
@@ -825,19 +825,19 @@ function renderGuardian(analysis) {
   els.riskBadge.style.color = severity === "danger" ? "var(--red)" : severity === "warning" ? "var(--amber)" : "var(--green)";
 
   if (severity === "danger") {
-    els.guardianTitle.textContent = "Modo Guardiao em crise";
-    els.guardianCopy.textContent = "Falhas simultaneas podem derrubar servicos essenciais. O sistema prioriza posto, agua, sensores de risco e roteador central.";
-    els.forecastText.textContent = `Colapso operacional provavel em ${minutesToLabel(analysis.autonomyMinutes)} se nao houver intervencao.`;
+    els.guardianTitle.textContent = "Modo Guardião em crise";
+    els.guardianCopy.textContent = "Falhas simultâneas podem derrubar serviços essenciais. O sistema prioriza posto, água, sensores de risco e roteador central.";
+    els.forecastText.textContent = `Colapso operacional provável em ${minutesToLabel(analysis.autonomyMinutes)} se não houver intervenção.`;
   } else if (severity === "warning") {
     els.guardianTitle.textContent = "Modo preventivo";
-    els.guardianCopy.textContent = "A telemetria saiu do padrao. A recomendacao e reduzir carga, estabilizar rede e observar tendencia por janela curta.";
+    els.guardianCopy.textContent = "A telemetria saiu do padrão. A recomendação é reduzir carga, estabilizar rede e observar tendência por janela curta.";
     els.forecastText.textContent = analysis.autonomyMinutes < 240
-      ? `Autonomia pode ficar critica em ${minutesToLabel(analysis.autonomyMinutes)}.`
-      : "Risco moderado, sem colapso imediato.";
+      ? `Autonomia pode ficar crítica em ${minutesToLabel(analysis.autonomyMinutes)}.`
+      : "Risco moderado, sem colapso imédiato.";
   } else {
-    els.guardianTitle.textContent = "Sistema estavel";
-    els.guardianCopy.textContent = "A operacao esta dentro dos limites. O modelo preditivo segue em observacao continua.";
-    els.forecastText.textContent = "Sem risco de colapso nas proximas 3 horas.";
+    els.guardianTitle.textContent = "Sistema estável";
+    els.guardianCopy.textContent = "A operação está dentro dos limites. O modelo preditivo segue em observação contínua.";
+    els.forecastText.textContent = "Sem risco de colapso nas próximas 3 horas.";
   }
 
   const actions = actionPlan(analysis);
@@ -856,27 +856,27 @@ function actionPlan(analysis) {
   const cause = analysis.root.label;
   if (analysis.severity === "danger") {
     const base = [
-      "Ativar matriz de prioridade: posto de saude, agua, sensores ambientais e roteador central.",
-      "Isolar cargas nao essenciais da escola e dos setores residenciais por 30 minutos.",
-      "Operar em edge local se cloud ou backhaul permanecerem instaveis.",
-      "Abrir incidente P1 com responsavel, causa provavel e tempo maximo de resposta.",
+      "Ativar matriz de prioridade: posto de saúde, água, sensores ambientais e roteador central.",
+      "Isolar cargas não essenciais da escola e dos setores residenciais por 30 minutos.",
+      "Operar em edge local se nuvem ou backhaul permanecerem instáveis.",
+      "Abrir incidente P1 com responsável, causa provável e tempo máximo de resposta.",
     ];
-    if (cause === "Rede") base.splice(1, 0, "Comutar para rota mesh secundaria e limitar trafego nao essencial.");
+    if (cause === "Rede") base.splice(1, 0, "Comutar para rota mesh secundária e limitar tráfego não essencial.");
     if (cause === "Energia") base.splice(1, 0, "Reduzir carga em 35% e proteger banco de baterias contra descarga profunda.");
-    if (cause === "Ambiente") base.splice(1, 0, "Confirmar evento com dois sensores independentes e avisar lideranca local.");
+    if (cause === "Ambiente") base.splice(1, 0, "Confirmar evento com dois sensores independentes e avisar liderança local.");
     return base;
   }
   if (analysis.severity === "warning") {
     return [
-      "Acompanhar tendencia por 10 minutos antes de escalar.",
-      "Preparar reducao de carga nao essencial se o score cair abaixo de 60.",
-      "Validar causa provavel com telemetria cruzada de energia, rede e sensores.",
+      "Acompanhar tendência por 10 minutos antes de escalar.",
+      "Preparar redução de carga não essencial se o pontuação cair abaixo de 60.",
+      "Validar causa provável com telemetria cruzada de energia, rede e sensores.",
     ];
   }
   return [
-    "Manter coleta edge/cloud em tempo real.",
-    "Atualizar baseline de normalidade com as ultimas amostras saudaveis.",
-    "Rodar previsao de autonomia, SLA e risco ambiental a cada ciclo.",
+    "Manter coleta edge/nuvem em tempo real.",
+    "Atualizar baseline de normalidade com as últimas amostras saudáveis.",
+    "Rodar previsão de autonomia, SLA e risco ambiental a cada ciclo.",
   ];
 }
 
@@ -885,7 +885,7 @@ function phaseState(analysis) {
     return {
       detect: { level: "danger", text: "P1 ativo" },
       isolate: { level: "danger", text: "executando" },
-      protect: { level: "danger", text: "prioritario" },
+      protect: { level: "danger", text: "prioritário" },
       recover: { level: "warning", text: `${analysis.mttr} min` },
     };
   }
@@ -908,19 +908,19 @@ function phaseState(analysis) {
 function renderAnalysis(analysis) {
   const items = [
     {
-      title: "Causa raiz provavel",
-      text: `${analysis.root.label === "nenhuma" ? "Nenhuma causa dominante" : analysis.root.label} com ${analysis.root.confidence}% de confianca.`,
+      title: "Causa raiz provável",
+      text: `${analysis.root.label === "nenhuma" ? "Nenhuma causa dominante" : analysis.root.label} com ${analysis.root.confidence}% de confiança.`,
     },
     {
-      title: "Previsao de autonomia",
-      text: `Autonomia projetada: ${minutesToLabel(analysis.autonomyMinutes)} considerando geracao e consumo atuais.`,
+      title: "Previsão de autonomia",
+      text: `Autonomia projetada: ${minutesToLabel(analysis.autonomyMinutes)} considerando geração e consumo atuais.`,
     },
     {
       title: "SLA e continuidade",
-      text: `Disponibilidade estimada de ${analysis.availability.toFixed(2)}%, MTTR de ${analysis.mttr} minutos e score ${analysis.operationalScore}.`,
+      text: `Disponibilidade estimada de ${analysis.availability.toFixed(2)}%, MTTR de ${analysis.mttr} minutos e pontuação ${analysis.operationalScore}.`,
     },
     {
-      title: "Anomalia estatistica",
+      title: "Anomalia estatística",
       text: `Maior desvio observado: ${analysis.anomaly.toFixed(1)}s contra o baseline simulado da comunidade.`,
     },
   ];
@@ -934,9 +934,9 @@ function renderDecisionBrief(analysis) {
   const decision = buildDecisionBrief(analysis);
   els.decisionBrief.innerHTML = [
     briefItem("Estado", decision.state, decision.summary, "wide"),
-    briefItem("Servico afetado", decision.service, decision.serviceDetail, ""),
+    briefItem("Serviço afetado", decision.service, decision.serviceDetail, ""),
     briefItem("Prioridade", decision.priority, decision.priorityDetail, ""),
-    briefItem("Proxima melhor acao", decision.nextAction, decision.actionDetail, "wide"),
+    briefItem("Próxima melhor ação", decision.nextAction, decision.actionDetail, "wide"),
   ].join("");
 }
 
@@ -947,23 +947,23 @@ function briefItem(label, title, text, extraClass) {
 function buildDecisionBrief(analysis) {
   const cause = analysis.root.label;
   const severity = analysis.severity;
-  const service = cause === "nenhuma" ? "Operacao geral" : cause;
+  const service = cause === "nenhuma" ? "Operação geral" : cause;
   const serviceDetails = {
-    Energia: "Geracao, bateria e carga comunitaria exigem ajuste fino.",
-    Rede: "Latencia, perda de pacotes ou roteadores afetam cloud e comunicacao.",
-    Ambiente: "Sensores apontam evento fisico ou perda de cobertura ambiental.",
-    Seguranca: "Ruido logico sugere leitura falsa, ataque simples ou firmware instavel.",
-    "Operacao geral": "Nenhum dominio domina o risco neste momento.",
+    Energia: "Geração, bateria e carga comunitária exigem ajuste fino.",
+    Rede: "Latência, perda de pacotes ou roteadores afetam nuvem e comunicação.",
+    Ambiente: "Sensores apontam evento físico ou perda de cobertura ambiental.",
+    Segurança: "Ruído lógico sugere leitura falsa, ataque simples ou firmware instável.",
+    "Operação geral": "Nenhum domínio domina o risco neste momento.",
   };
 
   if (severity === "danger") {
     return {
       state: "Crise operacional",
-      summary: `Score ${analysis.operationalScore}, risco ${Math.round(analysis.risks.continuity)}% e MTTR estimado em ${analysis.mttr} minutos.`,
+      summary: `Pontuação ${analysis.operationalScore}, risco ${Math.round(analysis.risks.continuity)}% e MTTR estimado em ${analysis.mttr} minutos.`,
       service,
       serviceDetail: serviceDetails[service],
-      priority: "P1 imediato",
-      priorityDetail: "Abrir incidente, proteger servicos essenciais e registrar decisao.",
+      priority: "P1 imédiato",
+      priorityDetail: "Abrir incidente, proteger serviços essenciais e registrar decisão.",
       nextAction: firstActionFor(analysis),
       actionDetail: "Executar agora e reavaliar a cada ciclo de telemetria.",
     };
@@ -971,26 +971,26 @@ function buildDecisionBrief(analysis) {
 
   if (severity === "warning") {
     return {
-      state: "Degradacao preventiva",
-      summary: `Score ${analysis.operationalScore}, autonomia ${minutesToLabel(analysis.autonomyMinutes)} e confianca ${analysis.root.confidence}%.`,
+      state: "Degradação preventiva",
+      summary: `Pontuação ${analysis.operationalScore}, autonomia ${minutesToLabel(analysis.autonomyMinutes)} e confiança ${analysis.root.confidence}%.`,
       service,
       serviceDetail: serviceDetails[service],
       priority: "P2 monitorado",
-      priorityDetail: "Acompanhar tendencia antes de acionar equipe externa.",
+      priorityDetail: "Acompanhar tendência antes de acionar equipe externa.",
       nextAction: firstActionFor(analysis),
-      actionDetail: "Preparar contencao se o score cair abaixo de 60.",
+      actionDetail: "Preparar contenção se o pontuação cair abaixo de 60.",
     };
   }
 
   return {
-    state: "Operacao saudavel",
-    summary: `Score ${analysis.operationalScore}, SLA ${analysis.availability.toFixed(2)}% e risco baixo.`,
-    service: "Todos os dominios",
+    state: "Operação saudável",
+    summary: `Pontuação ${analysis.operationalScore}, SLA ${analysis.availability.toFixed(2)}% e risco baixo.`,
+    service: "Todos os domínios",
     serviceDetail: "Energia, rede, ambiente e edge operando dentro do baseline.",
     priority: "P3 rotina",
-    priorityDetail: "Manter observabilidade e atualizar baseline com amostras saudaveis.",
-    nextAction: "Continuar previsao e sincronizacao edge/cloud.",
-    actionDetail: "Nenhuma intervencao imediata necessaria.",
+    priorityDetail: "Manter observabilidade e atualizar baseline com amostras saudáveis.",
+    nextAction: "Continuar previsão e sincronização edge/nuvem.",
+    actionDetail: "Nenhuma intervenção imediata necessária.",
   };
 }
 
@@ -1002,21 +1002,21 @@ async function copyOperationalReport() {
   const analysis = analyze();
   const decision = buildDecisionBrief(analysis);
   const report = [
-    "Sentinela Digital Pro - Relatorio operacional",
-    `Horario: ${formatTime()}`,
-    `Cenario: ${scenarioLabels[state.scenario]}`,
-    `Fonte meteorologica: ${state.liveWeather.enabled && state.liveWeather.current ? "Open-Meteo" : "Simulacao local"}`,
+    "Sentinela Digital Pro - Relatório operacional",
+    `Horário: ${formatTime()}`,
+    `Cenário: ${scenarioLabels[state.scenario]}`,
+    `Fonte meteorológica: ${state.liveWeather.enabled && state.liveWeather.current ? "Open-Meteo" : "Simulação local"}`,
     `Estado: ${decision.state}`,
-    `Score operacional: ${analysis.operationalScore}`,
+    `Pontuação operacional: ${analysis.operationalScore}`,
     `Risco de continuidade: ${Math.round(analysis.risks.continuity)}%`,
-    `Causa raiz provavel: ${analysis.root.label} (${analysis.root.confidence}% confianca)`,
-    `Autonomia energetica: ${minutesToLabel(analysis.autonomyMinutes)}`,
+    `Causa raiz provável: ${analysis.root.label} (${analysis.root.confidence}% confiança)`,
+    `Autonomia energética: ${minutesToLabel(analysis.autonomyMinutes)}`,
     `SLA estimado: ${analysis.availability.toFixed(2)}%`,
     `MTTR estimado: ${analysis.mttr} min`,
-    `Servico afetado: ${decision.service}`,
+    `Serviço afetado: ${decision.service}`,
     `Prioridade: ${decision.priority}`,
     "",
-    "Proximas acoes:",
+    "Próximas ações:",
     ...actionPlan(analysis).map((item, index) => `${index + 1}. ${item}`),
   ].join("\n");
 
@@ -1035,10 +1035,10 @@ async function copyOperationalReport() {
   }
 
   els.reportToast.classList.add("show");
-  els.reportToast.textContent = "Relatorio copiado para a area de transferencia";
-  announceState("Relatorio operacional copiado para a area de transferencia.");
+  els.reportToast.textContent = "Relatório copiado para a área de transferência";
+  announceState("Relatório operacional copiado para a área de transferência.");
   window.setTimeout(() => els.reportToast.classList.remove("show"), 1800);
-  pushEvent("info", "Relatorio copiado", "Resumo operacional enviado para a area de transferencia.");
+  pushEvent("info", "Relatório copiado", "Resumo operacional enviado para a área de transferência.");
   renderTimeline();
 }
 
@@ -1062,7 +1062,7 @@ function renderAssets() {
 }
 
 function levelLabel(level) {
-  return level === "danger" ? "critico" : level === "warning" ? "atencao" : "normal";
+  return level === "danger" ? "crítico" : level === "warning" ? "atenção" : "normal";
 }
 
 function renderTimeline() {
@@ -1156,10 +1156,10 @@ function trapDrawerFocus(event) {
   const first = focusable[0];
   const last = focusable[focusable.length - 1];
   if (event.shiftKey && document.activeElement === first) {
-    event.preventDefault();
+    event.prevêntDefault();
     last.focus();
   } else if (!event.shiftKey && document.activeElement === last) {
-    event.preventDefault();
+    event.prevêntDefault();
     first.focus();
   }
 }
@@ -1170,7 +1170,7 @@ function assetMetricCards(assetId, analysis) {
   const clinic = state.sectors.find((item) => item.id === "clinic");
   const map = {
     "solar-a": [
-      ["Geracao atual", `${m.generation.toFixed(1)} kW`],
+      ["Geração atual", `${m.generation.toFixed(1)} kW`],
       ["Demanda total", `${m.load.toFixed(1)} kW`],
       ["Risco energia", `${Math.round(analysis.risks.energy)}%`],
       ["Saldo instantaneo", `${(m.generation - m.load).toFixed(1)} kW`],
@@ -1178,11 +1178,11 @@ function assetMetricCards(assetId, analysis) {
     "battery-bank": [
       ["Carga do banco", `${Math.round(m.battery)}%`],
       ["Autonomia", minutesToLabel(analysis.autonomyMinutes)],
-      ["Descarga liquida", `${Math.max(0, m.load - m.generation).toFixed(1)} kW`],
+      ["Descarga líquida", `${Math.max(0, m.load - m.generation).toFixed(1)} kW`],
       ["MTTR estimado", `${analysis.mttr} min`],
     ],
     "mesh-tower": [
-      ["Latencia", `${Math.round(m.latency)} ms`],
+      ["Latência", `${Math.round(m.latency)} ms`],
       ["Perda de pacotes", `${m.packetLoss.toFixed(1)}%`],
       ["Roteadores", `${m.routersOnline}/${m.routersTotal}`],
       ["SLA estimado", `${analysis.availability.toFixed(2)}%`],
@@ -1216,7 +1216,7 @@ function assetDiagnostics(asset, analysis) {
   return [
     {
       title: "Leitura operacional",
-      text: `${asset.name} esta em estado ${levelLabel(asset.status)} com saude ${asset.health.toFixed(0)}%. Causa raiz global: ${cause}.`,
+      text: `${asset.name} está em estado ${levelLabel(asset.status)} com saúde ${asset.health.toFixed(0)}%. Causa raiz global: ${cause}.`,
     },
     {
       title: "Risco relacionado",
@@ -1227,7 +1227,7 @@ function assetDiagnostics(asset, analysis) {
       text: asset.action,
     },
     {
-      title: "Impacto comunitario",
+      title: "Impacto comunitário",
       text: impactText(asset.id, analysis),
     },
   ];
@@ -1235,12 +1235,12 @@ function assetDiagnostics(asset, analysis) {
 
 function relatedRiskText(assetId, risks) {
   const map = {
-    "solar-a": `Risco energetico em ${Math.round(risks.energy)}%, calculado por bateria, geracao e consumo.`,
-    "battery-bank": `Continuidade em risco ${Math.round(risks.continuity)}%, com autonomia projetada a partir da descarga liquida.`,
-    "mesh-tower": `Risco de rede em ${Math.round(risks.network)}%, combinando latencia, perda e roteadores indisponiveis.`,
-    "env-array": `Risco ambiental em ${Math.round(risks.environment)}%, cruzando calor, fumaca, AQI e sensores offline.`,
-    "school-load": `Carga flexivel usada para aliviar energia quando o risco energetico passa de 38%.`,
-    "clinic-load": `Servico essencial protegido mesmo em risco de continuidade de ${Math.round(risks.continuity)}%.`,
+    "solar-a": `Risco energético em ${Math.round(risks.energy)}%, calculado por bateria, geração e consumo.`,
+    "battery-bank": `Continuidade em risco ${Math.round(risks.continuity)}%, com autonomia projetada a partir da descarga líquida.`,
+    "mesh-tower": `Risco de rede em ${Math.round(risks.network)}%, combinando latência, perda e roteadores indisponíveis.`,
+    "env-array": `Risco ambiental em ${Math.round(risks.environment)}%, cruzando calor, fumaça, AQI e sensores offline.`,
+    "school-load": `Carga flexível usada para aliviar energia quando o risco energético passa de 38%.`,
+    "clinic-load": `Serviço essencial protegido mesmo em risco de continuidade de ${Math.round(risks.continuity)}%.`,
   };
   return map[assetId];
 }
@@ -1248,11 +1248,11 @@ function relatedRiskText(assetId, risks) {
 function impactText(assetId, analysis) {
   const map = {
     "solar-a": "Se falhar, a comunidade passa a operar por bateria e precisa reduzir cargas flexiveis.",
-    "battery-bank": "Se ficar critica, o Modo Guardiao corta cargas nao essenciais e preserva posto, agua e comunicacao.",
-    "mesh-tower": "Se degradar, a cloud perde sincronizacao e o painel passa a depender de operacao edge local.",
-    "env-array": "Se degradar, eventos ambientais precisam ser confirmados por redundancia ou verificacao em campo.",
-    "school-load": "Pode ser reduzida sem derrubar servicos vitais, funcionando como amortecedor de carga.",
-    "clinic-load": `Tem prioridade maxima; em crise recebe protecao automatica e MTTR alvo de ${analysis.mttr} minutos.`,
+    "battery-bank": "Se ficar crítica, o Modo Guardião corta cargas não essenciais e preserva posto, água e comunicação.",
+    "mesh-tower": "Se degradar, a nuvem perde sincronização e o painel passa a depender de operação edge local.",
+    "env-array": "Se degradar, eventos ambientais precisam ser confirmados por redundância ou verificação em campo.",
+    "school-load": "Pode ser reduzida sem derrubar serviços vitais, funcionando como amortecedor de carga.",
+    "clinic-load": `Tem prioridade máxima; em crise recebe proteção automática e MTTR alvo de ${analysis.mttr} minutos.`,
   };
   return map[assetId];
 }
@@ -1272,7 +1272,7 @@ function drawAssetMiniChart(assetId, analysis) {
 function assetSeries(assetId, data, analysis) {
   const maps = {
     "solar-a": [
-      { label: "Geracao", values: data.map((d) => d.generation * 18), min: 0, max: 100, color: "#ce7a1a" },
+      { label: "Geração", values: data.map((d) => d.generation * 18), min: 0, max: 100, color: "#ce7a1a" },
       { label: "Carga", values: data.map((d) => d.load * 18), min: 0, max: 100, color: "#285fd6" },
     ],
     "battery-bank": [
@@ -1280,7 +1280,7 @@ function assetSeries(assetId, data, analysis) {
       { label: "Risco", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
     ],
     "mesh-tower": [
-      { label: "Latencia", values: data.map((d) => d.latency), min: 0, max: 700, color: "#285fd6" },
+      { label: "Latência", values: data.map((d) => d.latency), min: 0, max: 700, color: "#285fd6" },
       { label: "Perda", values: data.map((d) => d.packetLoss * 10), min: 0, max: 100, color: "#7652c8" },
     ],
     "env-array": [
@@ -1288,7 +1288,7 @@ function assetSeries(assetId, data, analysis) {
       { label: "Risco geral", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
     ],
     "school-load": [
-      { label: "Score", values: data.map((d) => d.score), min: 0, max: 100, color: "#285fd6" },
+      { label: "Pontuação", values: data.map((d) => d.score), min: 0, max: 100, color: "#285fd6" },
       { label: "Risco", values: data.map((d) => d.risk), min: 0, max: 100, color: "#c2413f" },
     ],
     "clinic-load": [
@@ -1328,7 +1328,7 @@ function drawTimelineChart() {
   drawLegend(ctx, [
     ["Bateria", "#168a5b"],
     ["Risco", "#c2413f"],
-    ["Latencia", "#285fd6"],
+    ["Latência", "#285fd6"],
   ], pad, 18);
 }
 
@@ -1338,7 +1338,7 @@ function drawRadarChart(analysis) {
   const cx = width / 2;
   const cy = height / 2 + 10;
   const radius = Math.min(width, height) * 0.32;
-  const labels = ["Energia", "Rede", "Ambiente", "Cyber", "Continuidade"];
+  const labels = ["Energia", "Rede", "Ambiente", "Segurança", "Continuidade"];
   const values = [analysis.risks.energy, analysis.risks.network, analysis.risks.environment, analysis.risks.cyber, analysis.risks.continuity];
 
   ctx.strokeStyle = "#dbe4dd";
@@ -1493,8 +1493,8 @@ function roundedRect(ctx, x, y, width, height, radius) {
 
 function togglePause() {
   state.paused = !state.paused;
-  els.pauseButton.title = state.paused ? "Retomar simulacao" : "Pausar simulacao";
-  els.pauseButton.setAttribute("aria-label", state.paused ? "Retomar simulacao" : "Pausar simulacao");
+  els.pauseButton.title = state.paused ? "Retomar simulação" : "Pausar simulação";
+  els.pauseButton.setAttribute("aria-label", state.paused ? "Retomar simulação" : "Pausar simulação");
   els.pauseButton.innerHTML = state.paused
     ? '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>'
     : '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>';
@@ -1506,7 +1506,7 @@ function resetSimulation() {
     latitude: Number(els.latitudeInput.value) || baseline.liveWeather.location.latitude,
     longitude: Number(els.longitudeInput.value) || baseline.liveWeather.location.longitude,
   };
-  pushEvent("info", "Sistema iniciado", "Coleta edge/cloud, analise e visualizacoes complexas ativadas.");
+  pushEvent("info", "Sistema iniciado", "Coleta edge/nuvem, análise e visualizações complexas ativadas.");
   for (let i = 0; i < 8; i += 1) simulateTick(true);
   render();
 }
@@ -1528,8 +1528,8 @@ function bindEvents() {
     } else {
       state.liveWeather.enabled = false;
       state.liveWeather.status = "fallback";
-      state.liveWeather.message = "Dados reais pausados pelo usuario.";
-      pushEvent("info", "Fallback ativado", "Motor voltou a operar com simulacao local.");
+      state.liveWeather.message = "Dados reais pausados pelo usuário.";
+      pushEvent("info", "Fallback ativado", "Motor voltou a operar com simulação local.");
       simulateTick(true);
     }
   });
@@ -1544,6 +1544,11 @@ function bindEvents() {
   els.drawerClose.addEventListener("click", closeAssetDetail);
   els.copyReport.addEventListener("click", copyOperationalReport);
   $("[data-close-drawer]").addEventListener("click", closeAssetDetail);
+  $$(".collapsible-panel").forEach((panel) => {
+    panel.addEventListener("toggle", () => {
+      if (panel.open) window.requestAnimationFrame(() => render(analyze()));
+    });
+  });
   window.addEventListener("keydown", (event) => {
     trapDrawerFocus(event);
     if (event.key === "Escape" && els.drawer.classList.contains("open")) closeAssetDetail();
